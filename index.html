@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>International Teacher Review Tool 国际教师考核工具</title>
+
   <style>
     :root {
       --bg: #f4f6fb;
@@ -11,16 +12,20 @@
       --ink: #1f2937;
       --muted: #6b7280;
       --line: #e5e7eb;
+
       --lead: #4f46e5;
       --local: #0891b2;
       --student: #16a34a;
       --collab: #d97706;
       --shared: #7c3aed;
       --danger: #dc2626;
+
       --radius: 18px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -30,10 +35,19 @@
       line-height: 1.5;
     }
 
-    .app {
-      max-width: 1320px;
-      margin: 0 auto;
-      padding: 28px;
+    .hidden {
+      display: none !important;
+    }
+
+    .zh {
+      color: #475569;
+      font-size: 0.92em;
+      margin-top: 3px;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 13px;
     }
 
     .login-screen {
@@ -45,7 +59,7 @@
     }
 
     .login-card {
-      width: min(760px, 100%);
+      width: min(860px, 100%);
       background: white;
       border-radius: 28px;
       padding: 34px;
@@ -59,15 +73,10 @@
       line-height: 1.1;
     }
 
-    .zh {
-      color: #475569;
-      font-size: 0.92em;
-      margin-top: 3px;
-    }
-
-    .small {
-      color: var(--muted);
-      font-size: 13px;
+    .app {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 28px;
     }
 
     header {
@@ -85,7 +94,80 @@
       line-height: 1.1;
     }
 
-    header p { color: rgba(255,255,255,0.84); margin: 0; max-width: 980px; }
+    header p {
+      color: rgba(255,255,255,0.84);
+      margin: 0;
+      max-width: 980px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 390px 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+      border: 1px solid rgba(229, 231, 235, 0.9);
+      margin-bottom: 22px;
+    }
+
+    .sticky {
+      position: sticky;
+      top: 18px;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 22px;
+    }
+
+    h3 {
+      margin: 20px 0 10px;
+      font-size: 17px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: 11px 12px;
+      font-size: 14px;
+      color: var(--ink);
+      background: white;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+    }
+
+    textarea {
+      min-height: 88px;
+      resize: vertical;
+    }
+
+    .form-row {
+      margin-bottom: 14px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
 
     .top-actions, .button-row {
       display: flex;
@@ -108,52 +190,28 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      text-decoration: none;
     }
 
-    button:hover, .file-button:hover { transform: translateY(-1px); filter: brightness(0.95); }
-    button.secondary { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25); }
-    button.light { background: #f8fafc; color: #111827; border: 1px solid var(--line); }
-    button.danger { background: var(--danger); }
+    button:hover, .file-button:hover {
+      transform: translateY(-1px);
+      filter: brightness(0.95);
+    }
 
-    input, select, textarea {
-      width: 100%;
+    button.secondary {
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    button.light, .file-button.light {
+      background: #f8fafc;
+      color: #111827;
       border: 1px solid var(--line);
-      border-radius: 13px;
-      padding: 11px 12px;
-      font-size: 14px;
-      color: var(--ink);
-      background: white;
-      outline: none;
     }
 
-    input:focus, select:focus, textarea:focus {
-      border-color: #4f46e5;
-      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+    button.danger {
+      background: var(--danger);
     }
-
-    textarea { min-height: 88px; resize: vertical; }
-    label { display: block; font-size: 13px; font-weight: 900; margin-bottom: 6px; }
-    .form-row { margin-bottom: 14px; }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 390px 1fr;
-      gap: 22px;
-      align-items: start;
-    }
-
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 22px;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
-      border: 1px solid rgba(229, 231, 235, 0.9);
-      margin-bottom: 22px;
-    }
-
-    .sticky { position: sticky; top: 18px; }
-    h2 { margin: 0 0 14px; font-size: 22px; }
-    h3 { margin: 20px 0 10px; font-size: 17px; }
 
     .role-grid {
       display: grid;
@@ -178,7 +236,11 @@
       font-weight: normal;
     }
 
-    .role-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(15,23,42,0.08); }
+    .role-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(15,23,42,0.08);
+    }
+
     .role-lead { border-left-color: var(--lead); }
     .role-local { border-left-color: var(--local); }
     .role-student { border-left-color: var(--student); }
@@ -203,9 +265,22 @@
       flex-wrap: wrap;
     }
 
-    .section-banner h2 { margin: 0; color: white; }
-    .section-banner .zh { color: rgba(255,255,255,0.9); }
-    .section-banner .owner { font-weight: 900; font-size: 13px; background: rgba(255,255,255,0.18); padding: 7px 10px; border-radius: 999px; }
+    .section-banner h2 {
+      margin: 0;
+      color: white;
+    }
+
+    .section-banner .zh {
+      color: rgba(255,255,255,0.9);
+    }
+
+    .section-banner .owner {
+      font-weight: 900;
+      font-size: 13px;
+      background: rgba(255,255,255,0.18);
+      padding: 7px 10px;
+      border-radius: 999px;
+    }
 
     .lead-section { --section-colour: var(--lead); }
     .local-section { --section-colour: var(--local); }
@@ -225,7 +300,14 @@
       margin-bottom: 10px;
     }
 
-    .dot { width: 16px; height: 16px; border-radius: 999px; margin-top: 3px; background: var(--dot); }
+    .dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      margin-top: 3px;
+      background: var(--dot);
+    }
+
     .dot-lead { --dot: var(--lead); }
     .dot-local { --dot: var(--local); }
     .dot-student { --dot: var(--student); }
@@ -239,50 +321,189 @@
       margin-top: 18px;
     }
 
-    .big-score { font-size: 52px; line-height: 1; font-weight: 900; color: #312e81; margin: 8px 0 4px; }
-    .rating { font-weight: 900; font-size: 18px; }
-    .breakdown { margin-top: 12px; display: grid; gap: 8px; font-size: 14px; }
-    .breakdown-row { display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(67,56,202,0.25); padding-bottom: 6px; gap: 12px; }
+    .big-score {
+      font-size: 52px;
+      line-height: 1;
+      font-weight: 900;
+      color: #312e81;
+      margin: 8px 0 4px;
+    }
 
-    .criteria-list { display: grid; gap: 14px; }
-    .criterion { border: 1px solid var(--line); border-radius: 18px; padding: 16px; background: white; }
-    .criterion-top { display: grid; grid-template-columns: 1fr 160px; gap: 14px; align-items: start; }
-    .criterion-title { font-weight: 900; margin-bottom: 4px; }
-    .criterion-help { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
-    .evidence-prompt { background: #f9fafb; border: 1px dashed #d1d5db; border-radius: 12px; padding: 9px 10px; color: #4b5563; font-size: 13px; margin-bottom: 12px; }
+    .rating {
+      font-weight: 900;
+      font-size: 18px;
+    }
 
-    .notice { background: #fff7ed; border: 1px solid #fed7aa; color: #7c2d12; padding: 14px; border-radius: 16px; margin-bottom: 16px; font-size: 14px; }
-    .locked { opacity: 0.58; }
-    .locked input, .locked select, .locked textarea { pointer-events: none; background: #f3f4f6; }
-    .lock-note { background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; padding: 10px 12px; border-radius: 14px; margin-bottom: 14px; font-size: 13px; font-weight: 800; }
+    .breakdown {
+      margin-top: 12px;
+      display: grid;
+      gap: 8px;
+      font-size: 14px;
+    }
 
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .hidden { display: none !important; }
-    .summary-box { white-space: pre-wrap; background: #f9fafb; border: 1px solid var(--line); border-radius: 16px; padding: 16px; min-height: 160px; font-size: 14px; }
-    .print-report { display: none; background: white; color: #111827; padding: 28px; font-size: 13px; }
-    .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    .print-table th, .print-table td { border: 1px solid #ddd; padding: 8px; vertical-align: top; text-align: left; }
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dashed rgba(67,56,202,0.25);
+      padding-bottom: 6px;
+      gap: 12px;
+    }
+
+    .criteria-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .criterion {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      background: white;
+    }
+
+    .criterion-top {
+      display: grid;
+      grid-template-columns: 1fr 160px;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .criterion-title {
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .criterion-help {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .evidence-prompt {
+      background: #f9fafb;
+      border: 1px dashed #d1d5db;
+      border-radius: 12px;
+      padding: 9px 10px;
+      color: #4b5563;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .notice {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #7c2d12;
+      padding: 14px;
+      border-radius: 16px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      white-space: pre-line;
+    }
+
+    .locked {
+      opacity: 0.58;
+    }
+
+    .locked input,
+    .locked select,
+    .locked textarea {
+      pointer-events: none;
+      background: #f3f4f6;
+    }
+
+    .lock-note {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      padding: 10px 12px;
+      border-radius: 14px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .summary-box {
+      white-space: pre-wrap;
+      background: #f9fafb;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      min-height: 160px;
+      font-size: 14px;
+    }
+
+    .history-item {
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 10px;
+      margin-bottom: 8px;
+      background: white;
+    }
+
+    .print-report {
+      display: none;
+      background: white;
+      color: #111827;
+      padding: 28px;
+      font-size: 13px;
+    }
+
+    .print-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .print-table th,
+    .print-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      vertical-align: top;
+      text-align: left;
+    }
 
     @media (max-width: 980px) {
-      .grid, .role-grid { grid-template-columns: 1fr; }
-      .sticky { position: static; }
-      .criterion-top { grid-template-columns: 1fr; }
+      .grid, .role-grid, .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .sticky {
+        position: static;
+      }
+
+      .criterion-top {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media print {
-      body { background: white; }
-      .app, .login-screen { display: none !important; }
-      .print-report { display: block !important; }
+      body {
+        background: white;
+      }
+
+      .app, .login-screen {
+        display: none !important;
+      }
+
+      .print-report {
+        display: block !important;
+      }
     }
   </style>
 </head>
+
 <body>
   <div id="loginScreen" class="login-screen">
     <div class="login-card">
       <h1>International Teacher Review Login</h1>
       <div class="zh">国际教师考核登录</div>
-      <p class="small">Choose your reviewer role. This prototype uses role-based access inside one HTML file. For a real secure login across devices, this would need a database/backend.</p>
-      <p class="small">请选择您的考核角色。本原型在单个HTML文件中使用角色访问控制。如需真正跨设备安全登录，需要数据库/后端系统。</p>
+
+      <p class="small">
+        Choose your reviewer role. This prototype uses role-based access inside one HTML file. For a real secure login across devices, this would need a database/backend.
+      </p>
+      <p class="small">
+        请选择您的考核角色。本原型在单个HTML文件中使用角色访问控制。如需真正跨设备安全登录，需要数据库/后端系统。
+      </p>
 
       <div class="form-row">
         <label>Your Name / 您的姓名</label>
@@ -299,16 +520,36 @@
           <option value="admin">Admin / View All 管理员 / 查看全部</option>
         </select>
       </div>
+
       <div class="button-row">
         <button type="button" onclick="simpleEnterApp()">Enter Review Tool / 进入考核工具</button>
       </div>
 
       <div class="role-grid">
-        <button type="button" class="role-card role-lead" data-role="lead"><strong>Lead Reviewer / International Head</strong><div class="zh">主评审 / 国际负责人</div></button>
-        <button type="button" class="role-card role-local" data-role="local"><strong>Chinese Vice Principal</strong><div class="zh">中方副校长</div></button>
-        <button type="button" class="role-card role-student" data-role="student"><strong>Student Development Centre</strong><div class="zh">学生发展中心</div></button>
-        <button type="button" class="role-card role-collab" data-role="collab"><strong>Homeroom / Co-Teacher</strong><div class="zh">班主任 / 协同教师</div></button>
-        <button type="button" class="role-card role-admin" data-role="admin"><strong>Admin / View All</strong><div class="zh">管理员 / 查看全部</div></button>
+        <button type="button" class="role-card role-lead" data-role="lead">
+          <strong>Lead Reviewer / International Head</strong>
+          <div class="zh">主评审 / 国际负责人</div>
+        </button>
+
+        <button type="button" class="role-card role-local" data-role="local">
+          <strong>Chinese Vice Principal</strong>
+          <div class="zh">中方副校长</div>
+        </button>
+
+        <button type="button" class="role-card role-student" data-role="student">
+          <strong>Student Development Centre</strong>
+          <div class="zh">学生发展中心</div>
+        </button>
+
+        <button type="button" class="role-card role-collab" data-role="collab">
+          <strong>Homeroom / Co-Teacher</strong>
+          <div class="zh">班主任 / 协同教师</div>
+        </button>
+
+        <button type="button" class="role-card role-admin" data-role="admin">
+          <strong>Admin / View All</strong>
+          <div class="zh">管理员 / 查看全部</div>
+        </button>
       </div>
 
       <div class="button-row">
@@ -323,15 +564,23 @@
     <header>
       <h1>International Teacher Performance & Scope Sequence Review</h1>
       <div class="zh">国际教师绩效与范围序列考核</div>
-      <p>This bilingual review form is divided by reviewer responsibility. Each reviewer fills only their own colour-coded section, saves, exports the file, and passes it to the next reviewer.</p>
-      <p class="zh">此双语考核表按评审责任分区。每位评审只填写自己负责的颜色区域，保存后导出文件，再发送给下一位评审。</p>
+
+      <p>
+        This bilingual review form is divided by reviewer responsibility. Each reviewer fills only their own colour-coded section, saves, exports the file, and passes it to the next reviewer.
+      </p>
+      <p class="zh">
+        此双语考核表按评审责任分区。每位评审只填写自己负责的颜色区域，保存后导出文件，再发送给下一位评审。
+      </p>
+
       <div class="top-actions">
         <button onclick="saveSemesterRecord()">Save Semester Record 保存学期记录</button>
         <button onclick="saveLocal()">Quick Save 本机快速保存</button>
         <button onclick="exportJSON()">Export Saved File 导出文件</button>
         <button onclick="createShareLink()">Create Saved Review Link 生成保存链接</button>
+
         <label class="file-button secondary" for="importFile">Import File 导入文件</label>
         <input id="importFile" type="file" accept="application/json" class="hidden" onchange="importJSON(event)" />
+
         <button class="secondary" onclick="generateSummary()">Generate Summary 生成总结</button>
         <button class="secondary" onclick="printCleanReport()">Print 打印</button>
         <button class="secondary" onclick="logout()">Change Role 更换角色</button>
@@ -342,33 +591,36 @@
       <aside class="card sticky">
         <h2>Review Setup</h2>
         <div class="zh">考核设置</div>
+
         <p class="small"><strong>Current role:</strong> <span id="currentRoleLabel"></span></p>
         <p class="small zh"><strong>当前角色：</strong><span id="currentRoleLabelZh"></span></p>
 
         <div class="form-row">
           <label>Teacher Name / 教师姓名</label>
-          <input id="teacherName" data-save="meta" placeholder="e.g. Mark Smith" />
+          <input id="teacherName" placeholder="e.g. Mark Smith" />
         </div>
 
         <div class="two-col">
           <div class="form-row">
             <label>Grade / 年级</label>
-            <input id="gradeLevel" data-save="meta" placeholder="e.g. Grade 7" />
+            <input id="gradeLevel" placeholder="e.g. Grade 7" />
           </div>
+
           <div class="form-row">
             <label>Review Period / 考核周期</label>
-            <input id="reviewPeriod" data-save="meta" placeholder="e.g. May 2026" />
+            <input id="reviewPeriod" placeholder="e.g. May 2026" />
           </div>
         </div>
 
         <div class="two-col">
           <div class="form-row">
             <label>Academic Year / 学年</label>
-            <input id="academicYear" data-save="meta" placeholder="e.g. 2026-2027" />
+            <input id="academicYear" placeholder="e.g. 2026-2027" />
           </div>
+
           <div class="form-row">
             <label>Semester / 学期</label>
-            <select id="semester" data-save="meta" onchange="autoSaveQuiet()">
+            <select id="semester">
               <option value="S1">Semester 1 第一学期</option>
               <option value="S2">Semester 2 第二学期</option>
             </select>
@@ -377,7 +629,7 @@
 
         <div class="form-row">
           <label>Department / 部门</label>
-          <select id="department" data-save="meta">
+          <select id="department">
             <option>International Department 国际部</option>
             <option>Primary International Programme 小学国际项目</option>
             <option>MYP Department MYP部门</option>
@@ -389,7 +641,7 @@
 
         <div class="form-row">
           <label>Subject / 学科</label>
-          <select id="subjectSelect" data-save="meta" onchange="loadSubjectContent(); calculateScore(); autoSaveQuiet();">
+          <select id="subjectSelect" onchange="loadSubjectContent(); calculateScore(); autoSaveQuiet();">
             <option value="esl">ESL 英语作为第二语言</option>
             <option value="drama">Drama 戏剧</option>
             <option value="science">Science 科学</option>
@@ -403,15 +655,48 @@
 
         <h3>Reviewer Ownership</h3>
         <div class="zh">评审责任分工</div>
-        <div class="reviewer-chip"><span class="dot dot-lead"></span><div><strong>Section 1: Lead Reviewer</strong><div class="zh">第一部分：主评审 / 国际负责人</div><input id="leadName" data-save="meta" placeholder="Name 姓名" /></div></div>
-        <div class="reviewer-chip"><span class="dot dot-local"></span><div><strong>Section 2: Chinese Vice Principal</strong><div class="zh">第二部分：中方副校长</div><input id="localName" data-save="meta" placeholder="Name 姓名" /></div></div>
-        <div class="reviewer-chip"><span class="dot dot-student"></span><div><strong>Section 3: Student Development</strong><div class="zh">第三部分：学生发展中心</div><input id="studentName" data-save="meta" placeholder="Name 姓名" /></div></div>
-        <div class="reviewer-chip"><span class="dot dot-collab"></span><div><strong>Section 4: Homeroom / Co-Teacher</strong><div class="zh">第四部分：班主任 / 协同教师</div><input id="collabName" data-save="meta" placeholder="Name 姓名" /></div></div>
+
+        <div class="reviewer-chip">
+          <span class="dot dot-lead"></span>
+          <div>
+            <strong>Section 1: Lead Reviewer</strong>
+            <div class="zh">第一部分：主评审 / 国际负责人</div>
+            <input id="leadName" placeholder="Name 姓名" />
+          </div>
+        </div>
+
+        <div class="reviewer-chip">
+          <span class="dot dot-local"></span>
+          <div>
+            <strong>Section 2: Chinese Vice Principal</strong>
+            <div class="zh">第二部分：中方副校长</div>
+            <input id="localName" placeholder="Name 姓名" />
+          </div>
+        </div>
+
+        <div class="reviewer-chip">
+          <span class="dot dot-student"></span>
+          <div>
+            <strong>Section 3: Student Development</strong>
+            <div class="zh">第三部分：学生发展中心</div>
+            <input id="studentName" placeholder="Name 姓名" />
+          </div>
+        </div>
+
+        <div class="reviewer-chip">
+          <span class="dot dot-collab"></span>
+          <div>
+            <strong>Section 4: Homeroom / Co-Teacher</strong>
+            <div class="zh">第四部分：班主任 / 协同教师</div>
+            <input id="collabName" placeholder="Name 姓名" />
+          </div>
+        </div>
 
         <div class="score-panel">
           <div class="small">Overall Score / 总分</div>
           <div class="big-score"><span id="overallScore">0</span>%</div>
           <div id="ratingText" class="rating">Not yet scored 尚未评分</div>
+
           <div class="breakdown">
             <div class="breakdown-row"><span>Academic 学术</span><strong><span id="leadScore">0</span>%</strong></div>
             <div class="breakdown-row"><span>Local Leadership 本地管理</span><strong><span id="localScore">0</span>%</strong></div>
@@ -425,57 +710,131 @@
           <div class="zh">已保存学期记录</div>
           <p class="small">Saved records are stored in this browser. Export JSON or create a saved link to share with others.</p>
           <p class="small zh">记录保存在当前浏览器中。如需分享，请导出JSON或生成保存链接。</p>
+
           <div class="button-row">
             <button class="light" onclick="renderSemesterHistory()">Refresh 刷新</button>
             <button class="light" onclick="exportAllSemesterRecords()">Export All 导出全部</button>
           </div>
+
           <div id="semesterHistory" class="small" style="margin-top:12px;"></div>
         </div>
       </aside>
 
       <main>
         <section id="section-lead" class="card section lead-section" data-owner="lead">
-          <div class="section-banner"><div><h2>1. International Academic Review</h2><div class="zh">国际学术评审</div></div><div class="owner">Lead Reviewer / International Head 主评审 / 国际负责人</div></div>
+          <div class="section-banner">
+            <div>
+              <h2>1. International Academic Review</h2>
+              <div class="zh">国际学术评审</div>
+            </div>
+            <div class="owner">Lead Reviewer / International Head 主评审 / 国际负责人</div>
+          </div>
+
           <div class="lock-note hidden"></div>
           <div id="leadBrief" class="notice"></div>
           <div id="leadCriteria" class="criteria-list"></div>
         </section>
 
         <section id="section-local" class="card section local-section" data-owner="local">
-          <div class="section-banner"><div><h2>2. Local Leadership & School Alignment Review</h2><div class="zh">本地管理与学校要求一致性评审</div></div><div class="owner">Chinese Vice Principal 中方副校长</div></div>
+          <div class="section-banner">
+            <div>
+              <h2>2. Local Leadership & School Alignment Review</h2>
+              <div class="zh">本地管理与学校要求一致性评审</div>
+            </div>
+            <div class="owner">Chinese Vice Principal 中方副校长</div>
+          </div>
+
           <div class="lock-note hidden"></div>
-          <div class="notice"><strong>Focus:</strong> school systems, local expectations, parent confidence, communication, public-facing work and team cooperation.<div class="zh"><strong>重点：</strong>学校制度、本地要求、家长信任、沟通、对外活动以及团队配合。</div></div>
+          <div class="notice">
+Focus: school systems, local expectations, parent confidence, communication, public-facing work and team cooperation.
+重点：学校制度、本地要求、家长信任、沟通、对外活动以及团队配合。
+          </div>
           <div id="localCriteria" class="criteria-list"></div>
         </section>
 
         <section id="section-student" class="card section student-section" data-owner="student">
-          <div class="section-banner"><div><h2>3. Student Development & Pastoral Review</h2><div class="zh">学生发展与德育支持评审</div></div><div class="owner">Student Development Centre 学生发展中心</div></div>
+          <div class="section-banner">
+            <div>
+              <h2>3. Student Development & Pastoral Review</h2>
+              <div class="zh">学生发展与德育支持评审</div>
+            </div>
+            <div class="owner">Student Development Centre 学生发展中心</div>
+          </div>
+
           <div class="lock-note hidden"></div>
-          <div class="notice"><strong>Focus:</strong> classroom behaviour, safety, wellbeing, attendance cooperation, student routines and behaviour follow-up.<div class="zh"><strong>重点：</strong>课堂行为、安全、学生身心发展、考勤配合、学生常规和行为跟进。</div></div>
+          <div class="notice">
+Focus: classroom behaviour, safety, wellbeing, attendance cooperation, student routines and behaviour follow-up.
+重点：课堂行为、安全、学生身心发展、考勤配合、学生常规和行为跟进。
+          </div>
           <div id="studentCriteria" class="criteria-list"></div>
         </section>
 
         <section id="section-collab" class="card section collab-section" data-owner="collab">
-          <div class="section-banner"><div><h2>4. Homeroom / Co-Teacher Collaboration Review</h2><div class="zh">班主任 / 协同教师协作评审</div></div><div class="owner">Homeroom / Co-Teacher 班主任 / 协同教师</div></div>
+          <div class="section-banner">
+            <div>
+              <h2>4. Homeroom / Co-Teacher Collaboration Review</h2>
+              <div class="zh">班主任 / 协同教师协作评审</div>
+            </div>
+            <div class="owner">Homeroom / Co-Teacher 班主任 / 协同教师</div>
+          </div>
+
           <div class="lock-note hidden"></div>
-          <div class="notice"><strong>Focus:</strong> daily classroom cooperation, co-planning, student response, homework follow-up and support for different student levels.<div class="zh"><strong>重点：</strong>日常课堂配合、共同备课、学生反应、作业跟进以及不同层次学生支持。</div></div>
+          <div class="notice">
+Focus: daily classroom cooperation, co-planning, student response, homework follow-up and support for different student levels.
+重点：日常课堂配合、共同备课、学生反应、作业跟进以及不同层次学生支持。
+          </div>
           <div id="collabCriteria" class="criteria-list"></div>
         </section>
 
         <section id="section-shared" class="card section shared-section" data-owner="admin">
-          <div class="section-banner"><div><h2>5. Final Summary & Action Plan</h2><div class="zh">最终总结与行动计划</div></div><div class="owner">Admin / Lead Finalisation 管理员 / 主评审最终确认</div></div>
+          <div class="section-banner">
+            <div>
+              <h2>5. Final Summary & Action Plan</h2>
+              <div class="zh">最终总结与行动计划</div>
+            </div>
+            <div class="owner">Admin / Lead Finalisation 管理员 / 主评审最终确认</div>
+          </div>
+
           <div class="lock-note hidden"></div>
-          <div class="form-row"><label>Key Strengths / 主要优势</label><textarea id="strengths" data-save="shared" placeholder="English first, then Chinese if needed. 先英文，必要时再中文。"></textarea></div>
-          <div class="form-row"><label>Areas for Development / 发展方向</label><textarea id="development" data-save="shared"></textarea></div>
-          <div class="form-row"><label>Next Steps / 下一步行动</label><textarea id="nextSteps" data-save="shared"></textarea></div>
-          <div class="form-row"><label>Serious Concern / 一票否决或重大问题</label><select id="seriousConcern" data-save="shared" onchange="calculateScore(); autoSaveQuiet();"><option value="no">No 否</option><option value="yes">Yes 是</option></select></div>
-          <div class="form-row"><label>Serious Concern Details / 重大问题说明</label><textarea id="seriousNotes" data-save="shared"></textarea></div>
+
+          <div class="form-row">
+            <label>Key Strengths / 主要优势</label>
+            <textarea id="strengths" placeholder="English first, then Chinese if needed. 先英文，必要时再中文。"></textarea>
+          </div>
+
+          <div class="form-row">
+            <label>Areas for Development / 发展方向</label>
+            <textarea id="development"></textarea>
+          </div>
+
+          <div class="form-row">
+            <label>Next Steps / 下一步行动</label>
+            <textarea id="nextSteps"></textarea>
+          </div>
+
+          <div class="form-row">
+            <label>Serious Concern / 一票否决或重大问题</label>
+            <select id="seriousConcern" onchange="calculateScore(); autoSaveQuiet();">
+              <option value="no">No 否</option>
+              <option value="yes">Yes 是</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label>Serious Concern Details / 重大问题说明</label>
+            <textarea id="seriousNotes"></textarea>
+          </div>
         </section>
 
         <section class="card">
           <h2>Generated Review Summary</h2>
           <div class="zh">生成的考核总结</div>
-          <div class="button-row"><button onclick="generateSummary()">Refresh Summary 刷新总结</button><button class="light" onclick="copySummary()">Copy Summary 复制总结</button></div>
+
+          <div class="button-row">
+            <button onclick="generateSummary()">Refresh Summary 刷新总结</button>
+            <button class="light" onclick="copySummary()">Copy Summary 复制总结</button>
+          </div>
+
           <div id="summaryOutput" class="summary-box">Click “Generate Summary”. 点击“生成总结”。</div>
         </section>
       </main>
@@ -486,8 +845,9 @@
 
   <script>
     let currentRole = null;
-    const STORAGE_KEY = "cls_international_teacher_review_v2";
-    const HISTORY_KEY = "cls_international_teacher_review_semester_history_v1";
+
+    const STORAGE_KEY = "cls_international_teacher_review_current";
+    const HISTORY_KEY = "cls_international_teacher_review_history";
 
     const roleLabels = {
       lead: ["Lead Reviewer / International Head", "主评审 / 国际负责人"],
@@ -518,6 +878,7 @@
           ["Assessment matched to language level / 评估符合语言水平", "Assessment is accessible but challenging. / 评估既可达到又有挑战。", "Evidence 证据: rubrics, differentiated tasks, speaking/writing records."]
         ]
       },
+
       drama: {
         label: "Drama 戏剧",
         brief: "Drama focus: confidence, voice, movement, character, rehearsal, collaboration, reflection and final performance.\n戏剧重点：自信、声音、肢体、角色、排练、合作、反思和最终表演。",
@@ -528,6 +889,7 @@
           ["Reflection and performance outcome / 反思与表演成果", "Students evaluate and improve before final performance. / 学生在最终表演前进行评价和改进。", "Evidence 证据: self-reflection, final performance, rubric."]
         ]
       },
+
       science: {
         label: "Science 科学",
         brief: "Science focus: conceptual understanding, practical inquiry, safe experiments, scientific vocabulary, data and evidence-based explanation.\n科学重点：概念理解、实践探究、安全实验、科学词汇、数据和基于证据的解释。",
@@ -538,6 +900,7 @@
           ["Safety and data use / 安全与数据使用", "Practical work is safe and students use data to support conclusions. / 实验安全，学生用数据支持结论。", "Evidence 证据: safety routines, graphs, conclusions."]
         ]
       },
+
       maths: {
         label: "Maths 数学",
         brief: "Maths focus: conceptual clarity, fluency, reasoning, problem-solving, models, vocabulary and differentiation.\n数学重点：概念清晰、熟练度、推理、问题解决、模型、词汇和分层。",
@@ -548,6 +911,7 @@
           ["Problem-solving and differentiation / 问题解决与分层", "Tasks include support, core practice and challenge. / 任务包含支持、基础练习和挑战。", "Evidence 证据: tiered tasks, extension questions."]
         ]
       },
+
       geography: {
         label: "Geography 地理",
         brief: "Geography focus: maps, place knowledge, physical and human geography, inquiry questions, case studies, sustainability and MYP I&S criteria where relevant.\n地理重点：地图、区域认知、自然与人文地理、探究问题、案例研究、可持续发展及相关MYP个人与社会标准。",
@@ -558,6 +922,7 @@
           ["Case studies and assessment / 案例研究与评估", "Students apply geography to real places and assessment criteria. / 学生将地理知识应用于真实地点和评估标准。", "Evidence 证据: case-study work, presentations, MYP rubrics."]
         ]
       },
+
       stem: {
         label: "STEM STEM课程",
         brief: "STEM focus: hands-on design, coding, engineering, prototyping, testing, iteration, teamwork, safety and real-world problem-solving.\nSTEM重点：动手设计、编程、工程、原型制作、测试、迭代、团队合作、安全和真实问题解决。",
@@ -568,6 +933,7 @@
           ["Safety and teamwork / 安全与团队合作", "Students use tools safely and cooperate in roles. / 学生安全使用工具并分工合作。", "Evidence 证据: safety routines, role sheets, project reflections."]
         ]
       },
+
       english_subject: {
         label: "English Subject Classes 英语学科课",
         brief: "English Subject Classes focus: learning subject content through English with vocabulary, reading support, discussion and meaningful output.\n英语学科课重点：通过英语学习学科内容，并提供词汇、阅读支持、讨论和有意义的产出。",
@@ -578,6 +944,7 @@
           ["Meaningful output / 有意义的产出", "Students produce presentations, paragraphs, posters or reports. / 学生产出演讲、段落、海报或报告。", "Evidence 证据: final products, rubrics, drafts."]
         ]
       },
+
       language_literature: {
         label: "English Language and Literature 英语语言与文学",
         brief: "Language and Literature focus: text study, interpretation, author choices, evidence, analytical writing, creative response and discussion.\n语言与文学重点：文本学习、解读、作者选择、证据、分析写作、创意回应和讨论。",
@@ -612,18 +979,27 @@
     ];
 
     function criterionHTML(group, item, index) {
-      return `<div class="criterion">
-        <div class="criterion-top">
-          <div>
-            <div class="criterion-title">${index + 1}. ${item[0]}</div>
-            <div class="criterion-help">${item[1]}</div>
-            <div class="evidence-prompt">${item[2]}</div>
+      return `
+        <div class="criterion">
+          <div class="criterion-top">
+            <div>
+              <div class="criterion-title">${index + 1}. ${item[0]}</div>
+              <div class="criterion-help">${item[1]}</div>
+              <div class="evidence-prompt">${item[2]}</div>
+            </div>
+
+            <div>
+              <label>Score / 分数</label>
+              <select class="score-input" data-group="${group}" onchange="calculateScore(); autoSaveQuiet();">
+                ${scoreOptions}
+              </select>
+            </div>
           </div>
-          <div><label>Score / 分数</label><select class="score-input" data-save="${group}" data-group="${group}" onchange="calculateScore(); autoSaveQuiet();">${scoreOptions}</select></div>
+
+          <label>Evidence / Comment 证据 / 评语</label>
+          <textarea class="comment-input" data-group="${group}" placeholder="English first, then Chinese if needed. 先英文，必要时再中文。" oninput="autoSaveQuiet()"></textarea>
         </div>
-        <label>Evidence / Comment 证据 / 评语</label>
-        <textarea class="comment-input" data-save="${group}" data-group="${group}" placeholder="English first, then Chinese if needed. 先英文，必要时再中文。" oninput="autoSaveQuiet()"></textarea>
-      </div>`;
+      `;
     }
 
     function render(containerId, group, items) {
@@ -632,56 +1008,71 @@
       container.innerHTML = items.map((item, i) => criterionHTML(group, item, i)).join("");
     }
 
-    function loadSubjectContent() {
-      const subject = document.getElementById("subjectSelect")?.value || "esl";
-      const profile = subjectProfiles[subject] || subjectProfiles.esl;
-      const brief = document.getElementById("leadBrief");
-      if (brief) brief.textContent = profile.brief;
-      render("leadCriteria", "lead", profile.criteria);
-      render("localCriteria", "local", localCriteria);
-      render("studentCriteria", "student", studentCriteria);
-      render("collabCriteria", "collab", collabCriteria);
-      restoreData(getSavedData(), true);
-      applyRoleLocks();
-      calculateScore();
-    }
-
     function simpleEnterApp() {
-      const selected = document.getElementById("backupRoleSelect")?.value || "admin";
+      const selected = document.getElementById("backupRoleSelect").value || "admin";
       loginAs(selected);
     }
 
     function loginAs(role) {
-      try {
-        currentRole = role;
-        const name = document.getElementById("loginName")?.value.trim() || "";
-        document.getElementById("loginScreen")?.classList.add("hidden");
-        document.getElementById("app")?.classList.remove("hidden");
-        document.getElementById("currentRoleLabel").textContent = roleLabels[role]?.[0] || role;
-        document.getElementById("currentRoleLabelZh").textContent = roleLabels[role]?.[1] || role;
-        loadSubjectContent();
-        if (name) {
-          if (role === "lead") document.getElementById("leadName").value = name;
-          if (role === "local") document.getElementById("localName").value = name;
-          if (role === "student") document.getElementById("studentName").value = name;
-          if (role === "collab") document.getElementById("collabName").value = name;
-        }
-        restoreData(getSavedData(), true);
-        applyRoleLocks();
-        calculateScore();
-        renderSemesterHistory();
-      } catch (error) {
-        console.error(error);
-        alert(`The page tried to open but hit an error. Please send the red Console error to ChatGPT.\n\n页面尝试打开时出现错误。请把Console红色错误发给ChatGPT。\n\n${error.message}`);
+      currentRole = role;
+
+      const name = document.getElementById("loginName").value.trim();
+
+      document.getElementById("loginScreen").classList.add("hidden");
+      document.getElementById("app").classList.remove("hidden");
+
+      document.getElementById("currentRoleLabel").textContent = roleLabels[role][0];
+      document.getElementById("currentRoleLabelZh").textContent = roleLabels[role][1];
+
+      loadSubjectContent();
+
+      if (name) {
+        if (role === "lead") document.getElementById("leadName").value = name;
+        if (role === "local") document.getElementById("localName").value = name;
+        if (role === "student") document.getElementById("studentName").value = name;
+        if (role === "collab") document.getElementById("collabName").value = name;
       }
+
+      restoreData(getSavedData());
+      applyRoleLocks();
+      calculateScore();
+      renderSemesterHistory();
+    }
+
+    function logout() {
+      currentRole = null;
+      document.getElementById("app").classList.add("hidden");
+      document.getElementById("loginScreen").classList.remove("hidden");
+    }
+
+    function loadSubjectContent() {
+      const subject = document.getElementById("subjectSelect").value || "esl";
+      const profile = subjectProfiles[subject] || subjectProfiles.esl;
+
+      document.getElementById("leadBrief").textContent = profile.brief;
+
+      render("leadCriteria", "lead", profile.criteria);
+      render("localCriteria", "local", localCriteria);
+      render("studentCriteria", "student", studentCriteria);
+      render("collabCriteria", "collab", collabCriteria);
+
+      restoreData(getSavedData());
+      applyRoleLocks();
+      calculateScore();
     }
 
     function applyRoleLocks() {
       document.querySelectorAll("section[data-owner]").forEach(section => {
         const owner = section.dataset.owner;
         const note = section.querySelector(".lock-note");
-        const allowed = currentRole === "admin" || owner === currentRole || (owner === "admin" && currentRole === "lead");
+
+        const allowed =
+          currentRole === "admin" ||
+          owner === currentRole ||
+          (owner === "admin" && currentRole === "lead");
+
         section.classList.toggle("locked", !allowed);
+
         if (note) {
           note.classList.toggle("hidden", allowed);
           note.innerHTML = "Locked for your role. This section belongs to another reviewer.<div class='zh'>当前角色不可编辑。本部分由其他评审填写。</div>";
@@ -690,9 +1081,13 @@
     }
 
     function average(group) {
-      const inputs = [...document.querySelectorAll(`.score-input[data-group='${group}']`)];
-      const values = inputs.map(i => i.value === "" ? null : Number(i.value)).filter(v => v !== null);
+      const inputs = Array.from(document.querySelectorAll(`.score-input[data-group="${group}"]`));
+      const values = inputs
+        .map(input => input.value === "" ? null : Number(input.value))
+        .filter(value => value !== null);
+
       if (!values.length) return 0;
+
       return Math.round(values.reduce((a, b) => a + b, 0) / (values.length * 5) * 100);
     }
 
@@ -701,91 +1096,278 @@
       const local = average("local");
       const student = average("student");
       const collab = average("collab");
-      const serious = document.getElementById("seriousConcern")?.value === "yes";
-      const overall = serious ? 0 : Math.round(lead * 0.35 + local * 0.25 + student * 0.25 + collab * 0.15);
-      if (document.getElementById("leadScore")) document.getElementById("leadScore").textContent = lead;
-      if (document.getElementById("localScore")) document.getElementById("localScore").textContent = local;
-      if (document.getElementById("studentScore")) document.getElementById("studentScore").textContent = student;
-      if (document.getElementById("collabScore")) document.getElementById("collabScore").textContent = collab;
-      if (document.getElementById("overallScore")) document.getElementById("overallScore").textContent = overall;
-      const rating = serious ? "Serious Concern / Review Required 重大问题 / 需要复核" : overall >= 90 ? "Excellent 优秀" : overall >= 80 ? "Good 良好" : overall >= 70 ? "Meets Expectations 达到要求" : overall >= 60 ? "Developing 发展中" : overall > 0 ? "Performance Concern 绩效关注" : "Not yet scored 尚未评分";
-      if (document.getElementById("ratingText")) document.getElementById("ratingText").textContent = rating;
+
+      const serious = document.getElementById("seriousConcern").value === "yes";
+
+      const overall = serious
+        ? 0
+        : Math.round(lead * 0.35 + local * 0.25 + student * 0.25 + collab * 0.15);
+
+      document.getElementById("leadScore").textContent = lead;
+      document.getElementById("localScore").textContent = local;
+      document.getElementById("studentScore").textContent = student;
+      document.getElementById("collabScore").textContent = collab;
+      document.getElementById("overallScore").textContent = overall;
+
+      let rating = "Not yet scored 尚未评分";
+
+      if (serious) rating = "Serious Concern / Review Required 重大问题 / 需要复核";
+      else if (overall >= 90) rating = "Excellent 优秀";
+      else if (overall >= 80) rating = "Good 良好";
+      else if (overall >= 70) rating = "Meets Expectations 达到要求";
+      else if (overall >= 60) rating = "Developing 发展中";
+      else if (overall > 0) rating = "Performance Concern 绩效关注";
+
+      document.getElementById("ratingText").textContent = rating;
     }
 
     function collectData() {
-      const data = { savedAt: new Date().toISOString(), recordId: getRecordId(), fields: {}, scores: [] };
-      document.querySelectorAll("input[id], select[id], textarea[id]").forEach(el => data.fields[el.id] = el.value);
-      document.querySelectorAll(".score-input, .comment-input").forEach((el, i) => data.scores.push({ i, value: el.value }));
+      const data = {
+        savedAt: new Date().toISOString(),
+        recordId: getRecordId(),
+        fields: {},
+        dynamic: []
+      };
+
+      document.querySelectorAll("input[id], select[id], textarea[id]").forEach(el => {
+        data.fields[el.id] = el.value;
+      });
+
+      document.querySelectorAll(".score-input, .comment-input").forEach((el, index) => {
+        data.dynamic.push({
+          index,
+          value: el.value
+        });
+      });
+
       return data;
     }
 
-    function restoreData(data, quiet = false) {
+    function restoreData(data) {
       if (!data) return;
+
       Object.entries(data.fields || {}).forEach(([id, value]) => {
         const el = document.getElementById(id);
         if (el) el.value = value;
       });
-      if (data.fields?.subjectSelect && document.getElementById("subjectSelect")?.value !== data.fields.subjectSelect && !quiet) {
-        document.getElementById("subjectSelect").value = data.fields.subjectSelect;
-        loadSubjectContent();
-      }
-      const dynamic = [...document.querySelectorAll(".score-input, .comment-input")];
-      (data.scores || []).forEach(item => {
-        if (dynamic[item.i]) dynamic[item.i].value = item.value;
+
+      const dynamic = Array.from(document.querySelectorAll(".score-input, .comment-input"));
+
+      (data.dynamic || []).forEach(item => {
+        if (dynamic[item.index]) dynamic[item.index].value = item.value;
       });
+
       calculateScore();
     }
 
     function getSavedData() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; }
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY));
+      } catch {
+        return null;
+      }
     }
 
     function getRecordId() {
-      const teacher = (document.getElementById("teacherName")?.value || "unknown_teacher").trim().replace(/[^a-z0-9]/gi, "_").toLowerCase();
-      const year = (document.getElementById("academicYear")?.value || "unknown_year").trim().replace(/[^a-z0-9]/gi, "_").toLowerCase();
-      const semester = document.getElementById("semester")?.value || "S1";
+      const teacher = (document.getElementById("teacherName").value || "unknown_teacher")
+        .trim()
+        .replace(/[^a-z0-9]/gi, "_")
+        .toLowerCase();
+
+      const year = (document.getElementById("academicYear").value || "unknown_year")
+        .trim()
+        .replace(/[^a-z0-9]/gi, "_")
+        .toLowerCase();
+
+      const semester = document.getElementById("semester").value || "S1";
+
       return `${teacher}_${year}_${semester}`;
     }
 
     function getHistory() {
-      try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || {}; } catch { return {}; }
+      try {
+        return JSON.parse(localStorage.getItem(HISTORY_KEY)) || {};
+      } catch {
+        return {};
+      }
     }
 
     function setHistory(history) {
       localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
     }
 
-    function saveSemesterRecord() {
-      const data = collectData();
-      const history = getHistory();
-      history[data.recordId] = data;
-      setHistory(history);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      renderSemesterHistory();
-      alert(`Semester record saved.\n\n学期记录已保存。\n\nRecord: ${data.recordId}`);
-    }
-
     function saveLocal() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(collectData()));
-      alert("Quick saved on this computer. 快速保存到本机。\n\nFor semester archive, use Save Semester Record. 如需保存为学期记录，请点击“保存学期记录”。");
+      alert("Quick saved on this computer. 快速保存到本机。");
     }
 
     function autoSaveQuiet() {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(collectData())); } catch (e) { console.warn(e); }
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(collectData()));
+      } catch (error) {
+        console.warn(error);
+      }
+    }
+
+    function saveSemesterRecord() {
+      const data = collectData();
+      const history = getHistory();
+
+      history[data.recordId] = data;
+
+      setHistory(history);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+      renderSemesterHistory();
+
+      alert(`Semester record saved.\n\n学期记录已保存。\n\nRecord: ${data.recordId}`);
+    }
+
+    function renderSemesterHistory() {
+      const box = document.getElementById("semesterHistory");
+      if (!box) return;
+
+      const history = getHistory();
+      const records = Object.values(history).sort((a, b) => {
+        return (b.savedAt || "").localeCompare(a.savedAt || "");
+      });
+
+      if (!records.length) {
+        box.innerHTML = "No saved semester records yet.<div class='zh'>暂无已保存学期记录。</div>";
+        return;
+      }
+
+      box.innerHTML = records.map(record => {
+        const f = record.fields || {};
+        const title = `${f.teacherName || "Unnamed teacher"} | ${f.academicYear || "No year"} | ${f.semester || "No semester"}`;
+        const saved = record.savedAt ? new Date(record.savedAt).toLocaleString() : "unknown";
+
+        return `
+          <div class="history-item">
+            <strong>${title}</strong>
+            <div class="zh">${f.teacherName || "未命名教师"} | ${f.academicYear || "无学年"} | ${f.semester === "S2" ? "第二学期" : "第一学期"}</div>
+            <div class="small">Saved: ${saved}</div>
+
+            <div class="button-row" style="margin-top:8px;">
+              <button class="light" onclick="loadSemesterRecord('${record.recordId}')">Load 加载</button>
+              <button class="light" onclick="deleteSemesterRecord('${record.recordId}')">Delete 删除</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function loadSemesterRecord(recordId) {
+      const history = getHistory();
+      const data = history[recordId];
+
+      if (!data) {
+        alert("Record not found. 找不到记录。");
+        return;
+      }
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+      if (data.fields && data.fields.subjectSelect) {
+        document.getElementById("subjectSelect").value = data.fields.subjectSelect;
+      }
+
+      loadSubjectContent();
+      restoreData(data);
+
+      alert("Semester record loaded. 已加载学期记录。");
+    }
+
+    function deleteSemesterRecord(recordId) {
+      if (!confirm("Delete this semester record?\n\n是否删除此学期记录？")) return;
+
+      const history = getHistory();
+      delete history[recordId];
+
+      setHistory(history);
+      renderSemesterHistory();
     }
 
     function exportJSON() {
       const data = collectData();
+
       const history = getHistory();
       history[data.recordId] = data;
       setHistory(history);
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: "application/json"
+      });
+
       const a = document.createElement("a");
-      const teacher = (document.getElementById("teacherName")?.value || "teacher").replace(/[^a-z0-9]/gi, "_");
+      const teacher = (document.getElementById("teacherName").value || "teacher").replace(/[^a-z0-9]/gi, "_");
+      const year = document.getElementById("academicYear").value || "year";
+      const semester = document.getElementById("semester").value || "semester";
+
       a.href = URL.createObjectURL(blob);
-      a.download = `${teacher}_${document.getElementById("academicYear")?.value || "year"}_${document.getElementById("semester")?.value || "semester"}_international_teacher_review.json`;
+      a.download = `${teacher}_${year}_${semester}_international_teacher_review.json`;
       a.click();
+
       URL.revokeObjectURL(a.href);
+    }
+
+    function exportAllSemesterRecords() {
+      const data = {
+        exportedAt: new Date().toISOString(),
+        allSemesterRecords: getHistory()
+      };
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: "application/json"
+      });
+
+      const a = document.createElement("a");
+
+      a.href = URL.createObjectURL(blob);
+      a.download = "all_international_teacher_semester_reviews.json";
+      a.click();
+
+      URL.revokeObjectURL(a.href);
+    }
+
+    function importJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+
+          if (data.allSemesterRecords) {
+            setHistory(data.allSemesterRecords);
+            renderSemesterHistory();
+            alert("All semester records imported.\n\n已导入全部学期记录。");
+            return;
+          }
+
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+          const history = getHistory();
+          history[data.recordId || getRecordId()] = data;
+          setHistory(history);
+
+          if (data.fields && data.fields.subjectSelect) {
+            document.getElementById("subjectSelect").value = data.fields.subjectSelect;
+          }
+
+          loadSubjectContent();
+          restoreData(data);
+          renderSemesterHistory();
+
+          alert("Imported successfully. 导入成功。");
+        } catch (error) {
+          alert("Import failed. Please choose a valid saved review JSON file.\n\n导入失败，请选择有效JSON文件。");
+        }
+      };
+
+      reader.readAsText(file);
     }
 
     function encodeReviewData(data) {
@@ -801,10 +1383,12 @@
       const encoded = encodeReviewData(data);
       const base = window.location.href.split("#")[0];
       const link = `${base}#review=${encoded}`;
+
       if (link.length > 18000) {
         alert("This review is getting too large for a reliable share link. Please use Export Saved File instead.\n\n此考核内容较多，链接可能过长。请使用“导出文件”。");
         return;
       }
+
       navigator.clipboard.writeText(link).then(() => {
         alert("Saved review link copied. Send this link to the next reviewer.\n\n保存链接已复制。请发送给下一位评审。\n\nImportant: this stores the review data inside the link, not in a real database.\n注意：数据保存在链接中，不是在真实数据库中。");
       }).catch(() => {
@@ -814,167 +1398,165 @@
 
     function loadFromShareLink() {
       const hash = window.location.hash || "";
+
       if (!hash.startsWith("#review=")) {
         alert("No saved review data found in the link.\n\n链接中没有找到已保存的考核数据。");
         return;
       }
+
       try {
         const encoded = hash.replace("#review=", "");
         const data = decodeReviewData(encoded);
+
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        if (data.fields?.subjectSelect && document.getElementById("subjectSelect")) {
+
+        if (data.fields && data.fields.subjectSelect && document.getElementById("subjectSelect")) {
           document.getElementById("subjectSelect").value = data.fields.subjectSelect;
         }
-        if (document.getElementById("app")?.classList.contains("hidden")) {
+
+        if (document.getElementById("app").classList.contains("hidden")) {
           alert("Review data found. Please log in with your reviewer role, then the saved review will load.\n\n已找到考核数据。请先选择您的评审角色登录，之后数据会自动加载。");
         } else {
           loadSubjectContent();
           restoreData(data);
           alert("Saved review loaded from link.\n\n已从链接加载考核数据。");
         }
-      } catch (e) {
+      } catch (error) {
         alert("Could not load the saved review link. It may be damaged or too long.\n\n无法加载保存链接，链接可能损坏或过长。");
       }
     }
 
-    function importJSON(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const data = JSON.parse(reader.result);
-          if (data.allSemesterRecords) {
-            setHistory(data.allSemesterRecords);
-            alert("All semester records imported.\n\n已导入全部学期记录。");
-            renderSemesterHistory();
-            return;
-          }
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-          const history = getHistory();
-          history[data.recordId || getRecordId()] = data;
-          setHistory(history);
-          if (data.fields?.subjectSelect && document.getElementById("subjectSelect")) {
-            document.getElementById("subjectSelect").value = data.fields.subjectSelect;
-          }
-          loadSubjectContent();
-          restoreData(data);
-          renderSemesterHistory();
-          alert("Imported successfully. 导入成功。");
-        } catch (e) {
-          alert("Import failed. Please choose a valid saved review JSON file. 导入失败，请选择有效JSON文件。");
-        }
-      };
-      reader.readAsText(file);
-    }
-
-    function renderSemesterHistory() {
-      const box = document.getElementById("semesterHistory");
-      if (!box) return;
-      const history = getHistory();
-      const records = Object.values(history).sort((a, b) => (b.savedAt || "").localeCompare(a.savedAt || ""));
-      if (!records.length) {
-        box.innerHTML = "No saved semester records yet.<div class='zh'>暂无已保存学期记录。</div>";
-        return;
-      }
-      box.innerHTML = records.map(record => {
-        const f = record.fields || {};
-        const title = `${f.teacherName || "Unnamed teacher"} | ${f.academicYear || "No year"} | ${f.semester || "No semester"}`;
-        const sub = `${f.subjectSelect || "subject"} · Saved: ${record.savedAt ? new Date(record.savedAt).toLocaleString() : "unknown"}`;
-        return `<div style="border:1px solid #e5e7eb; border-radius:14px; padding:10px; margin-bottom:8px; background:white;">
-          <strong>${title}</strong><div class="zh">${f.teacherName || "未命名教师"} | ${f.academicYear || "无学年"} | ${f.semester === "S2" ? "第二学期" : "第一学期"}</div>
-          <div class="small">${sub}</div>
-          <div class="button-row" style="margin-top:8px;">
-            <button class="light" onclick="loadSemesterRecord('${record.recordId}')">Load 加载</button>
-            <button class="light" onclick="deleteSemesterRecord('${record.recordId}')">Delete 删除</button>
-          </div>
-        </div>`;
-      }).join("");
-    }
-
-    function loadSemesterRecord(recordId) {
-      const history = getHistory();
-      const data = history[recordId];
-      if (!data) return alert("Record not found. 找不到记录。");
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      if (data.fields?.subjectSelect && document.getElementById("subjectSelect")) {
-        document.getElementById("subjectSelect").value = data.fields.subjectSelect;
-      }
-      loadSubjectContent();
-      restoreData(data);
-      alert("Semester record loaded. 已加载学期记录。");
-    }
-
-    function deleteSemesterRecord(recordId) {
-      if (!confirm("Delete this semester record?\n\n是否删除此学期记录？")) return;
-      const history = getHistory();
-      delete history[recordId];
-      setHistory(history);
-      renderSemesterHistory();
-    }
-
-    function exportAllSemesterRecords() {
-      const data = { exportedAt: new Date().toISOString(), allSemesterRecords: getHistory() };
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "all_international_teacher_semester_reviews.json";
-      a.click();
-      URL.revokeObjectURL(a.href);
-    }
-
     function getRows(group) {
-      return [...document.querySelectorAll(`.score-input[data-group='${group}']`)].map(input => {
+      return Array.from(document.querySelectorAll(`.score-input[data-group="${group}"]`)).map(input => {
         const card = input.closest(".criterion");
+
         return {
-          title: card.querySelector(".criterion-title")?.textContent || "",
-          expectation: card.querySelector(".criterion-help")?.textContent || "",
-          evidence: card.querySelector(".evidence-prompt")?.textContent || "",
+          title: card.querySelector(".criterion-title").textContent || "",
+          expectation: card.querySelector(".criterion-help").textContent || "",
+          evidence: card.querySelector(".evidence-prompt").textContent || "",
           score: input.value || "Not scored 未评分",
-          comment: card.querySelector(".comment-input")?.value || ""
+          comment: card.querySelector(".comment-input").value || ""
         };
       });
     }
 
     function generateSummary() {
       calculateScore();
-      const subject = subjectProfiles[document.getElementById("subjectSelect")?.value || "esl"].label;
-      const summary = `International Teacher Review 国际教师考核\n\nTeacher 教师: ${document.getElementById("teacherName")?.value || "Not provided 未填写"}\nSubject 学科: ${subject}\nGrade 年级: ${document.getElementById("gradeLevel")?.value || "Not provided 未填写"}\nReview Period 考核周期: ${document.getElementById("reviewPeriod")?.value || "Not provided 未填写"}\nAcademic Year 学年: ${document.getElementById("academicYear")?.value || "Not provided 未填写"}\nSemester 学期: ${document.getElementById("semester")?.value === "S2" ? "Semester 2 第二学期" : "Semester 1 第一学期"}\n\nReviewer Ownership 评审责任:\n1. Lead Reviewer / International Head 主评审 / 国际负责人: ${document.getElementById("leadName")?.value || "Not provided 未填写"}\n2. Chinese Vice Principal 中方副校长: ${document.getElementById("localName")?.value || "Not provided 未填写"}\n3. Student Development Centre 学生发展中心: ${document.getElementById("studentName")?.value || "Not provided 未填写"}\n4. Homeroom / Co-Teacher 班主任 / 协同教师: ${document.getElementById("collabName")?.value || "Not provided 未填写"}\n\nScores 分数:\n- International Academic Review 国际学术评审: ${document.getElementById("leadScore")?.textContent || "0"}%\n- Local Leadership Review 本地管理评审: ${document.getElementById("localScore")?.textContent || "0"}%\n- Student Development Review 学生发展评审: ${document.getElementById("studentScore")?.textContent || "0"}%\n- Collaboration Review 协作评审: ${document.getElementById("collabScore")?.textContent || "0"}%\n\nOverall 总分: ${document.getElementById("overallScore")?.textContent || "0"}%\nRating 等级: ${document.getElementById("ratingText")?.textContent || "Not yet scored 尚未评分"}\n\nKey Strengths 主要优势:\n${document.getElementById("strengths")?.value || "Not provided 未填写"}\n\nAreas for Development 发展方向:\n${document.getElementById("development")?.value || "Not provided 未填写"}\n\nNext Steps 下一步行动:\n${document.getElementById("nextSteps")?.value || "Not provided 未填写"}\n\nSerious Concern 重大问题:\n${document.getElementById("seriousConcern")?.value === "yes" ? "Yes 是" : "No 否"}\n${document.getElementById("seriousNotes")?.value || ""}`;
+
+      const subjectKey = document.getElementById("subjectSelect").value || "esl";
+      const subject = subjectProfiles[subjectKey].label;
+
+      const summary = `International Teacher Review 国际教师考核
+
+Teacher 教师: ${document.getElementById("teacherName").value || "Not provided 未填写"}
+Subject 学科: ${subject}
+Grade 年级: ${document.getElementById("gradeLevel").value || "Not provided 未填写"}
+Review Period 考核周期: ${document.getElementById("reviewPeriod").value || "Not provided 未填写"}
+Academic Year 学年: ${document.getElementById("academicYear").value || "Not provided 未填写"}
+Semester 学期: ${document.getElementById("semester").value === "S2" ? "Semester 2 第二学期" : "Semester 1 第一学期"}
+
+Reviewer Ownership 评审责任:
+1. Lead Reviewer / International Head 主评审 / 国际负责人: ${document.getElementById("leadName").value || "Not provided 未填写"}
+2. Chinese Vice Principal 中方副校长: ${document.getElementById("localName").value || "Not provided 未填写"}
+3. Student Development Centre 学生发展中心: ${document.getElementById("studentName").value || "Not provided 未填写"}
+4. Homeroom / Co-Teacher 班主任 / 协同教师: ${document.getElementById("collabName").value || "Not provided 未填写"}
+
+Scores 分数:
+- International Academic Review 国际学术评审: ${document.getElementById("leadScore").textContent}%
+- Local Leadership Review 本地管理评审: ${document.getElementById("localScore").textContent}%
+- Student Development Review 学生发展评审: ${document.getElementById("studentScore").textContent}%
+- Collaboration Review 协作评审: ${document.getElementById("collabScore").textContent}%
+
+Overall 总分: ${document.getElementById("overallScore").textContent}%
+Rating 等级: ${document.getElementById("ratingText").textContent}
+
+Key Strengths 主要优势:
+${document.getElementById("strengths").value || "Not provided 未填写"}
+
+Areas for Development 发展方向:
+${document.getElementById("development").value || "Not provided 未填写"}
+
+Next Steps 下一步行动:
+${document.getElementById("nextSteps").value || "Not provided 未填写"}
+
+Serious Concern 重大问题:
+${document.getElementById("seriousConcern").value === "yes" ? "Yes 是" : "No 否"}
+${document.getElementById("seriousNotes").value || ""}`;
+
       document.getElementById("summaryOutput").textContent = summary;
+
       return summary;
     }
 
     function copySummary() {
       const text = generateSummary();
-      navigator.clipboard.writeText(text).then(() => alert("Copied. 已复制。"));
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Copied. 已复制。");
+      });
     }
 
     function tableHTML(title, rows) {
-      return `<h2>${title}</h2><table class="print-table"><thead><tr><th>Criterion 标准</th><th>Expectation 要求</th><th>Evidence 证据</th><th>Score 分数</th><th>Comment 评语</th></tr></thead><tbody>${rows.map(r => `<tr><td><strong>${r.title}</strong></td><td>${r.expectation}</td><td>${r.evidence}</td><td>${r.score}</td><td>${r.comment}</td></tr>`).join("")}</tbody></table>`;
+      return `
+        <h2>${title}</h2>
+        <table class="print-table">
+          <thead>
+            <tr>
+              <th>Criterion 标准</th>
+              <th>Expectation 要求</th>
+              <th>Evidence 证据</th>
+              <th>Score 分数</th>
+              <th>Comment 评语</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(row => `
+              <tr>
+                <td><strong>${row.title}</strong></td>
+                <td>${row.expectation}</td>
+                <td>${row.evidence}</td>
+                <td>${row.score}</td>
+                <td>${row.comment}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
     }
 
     function printCleanReport() {
       const summary = generateSummary();
-      document.getElementById("printReport").innerHTML = `<h1>International Teacher Review 国际教师考核</h1><p style="white-space:pre-wrap">${summary}</p>${tableHTML("1. International Academic Review 国际学术评审", getRows("lead"))}${tableHTML("2. Local Leadership Review 本地管理评审", getRows("local"))}${tableHTML("3. Student Development Review 学生发展评审", getRows("student"))}${tableHTML("4. Collaboration Review 协作评审", getRows("collab"))}`;
+
+      document.getElementById("printReport").innerHTML = `
+        <h1>International Teacher Review 国际教师考核</h1>
+        <p style="white-space:pre-wrap">${summary}</p>
+        ${tableHTML("1. International Academic Review 国际学术评审", getRows("lead"))}
+        ${tableHTML("2. Local Leadership Review 本地管理评审", getRows("local"))}
+        ${tableHTML("3. Student Development Review 学生发展评审", getRows("student"))}
+        ${tableHTML("4. Collaboration Review 协作评审", getRows("collab"))}
+      `;
+
       setTimeout(() => window.print(), 100);
     }
 
-    function logout() {
-      currentRole = null;
-      document.getElementById("app")?.classList.add("hidden");
-      document.getElementById("loginScreen")?.classList.remove("hidden");
-    }
-
-    window.addEventListener("input", e => {
-      if (e.target.matches("input, textarea, select")) autoSaveQuiet();
+    window.addEventListener("input", event => {
+      if (event.target.matches("input, textarea, select")) {
+        autoSaveQuiet();
+      }
     });
 
     window.addEventListener("DOMContentLoaded", () => {
       document.querySelectorAll(".role-card[data-role]").forEach(card => {
-        card.addEventListener("click", () => loginAs(card.dataset.role));
+        card.addEventListener("click", () => {
+          loginAs(card.dataset.role);
+        });
       });
+
       renderSemesterHistory();
-      if ((window.location.hash || "").startsWith("#review=")) loadFromShareLink();
+
+      if ((window.location.hash || "").startsWith("#review=")) {
+        loadFromShareLink();
+      }
     });
   </script>
 </body>
