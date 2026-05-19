@@ -289,6 +289,20 @@
         <input id="loginName" placeholder="e.g. Trevor Stewart" />
       </div>
 
+      <div class="form-row" style="margin-top:18px;">
+        <label>Backup Login / 备用登录</label>
+        <select id="backupRoleSelect">
+          <option value="lead">Lead Reviewer / International Head 主评审 / 国际负责人</option>
+          <option value="local">Chinese Vice Principal 中方副校长</option>
+          <option value="student">Student Development Centre 学生发展中心</option>
+          <option value="collab">Homeroom / Co-Teacher 班主任 / 协同教师</option>
+          <option value="admin">Admin / View All 管理员 / 查看全部</option>
+        </select>
+      </div>
+      <div class="button-row">
+        <button type="button" onclick="simpleEnterApp()">Enter Review Tool / 进入考核工具</button>
+      </div>
+
       <div class="role-grid">
         <button type="button" class="role-card role-lead" data-role="lead"><strong>Lead Reviewer / International Head</strong><div class="zh">主评审 / 国际负责人</div></button>
         <button type="button" class="role-card role-local" data-role="local"><strong>Chinese Vice Principal</strong><div class="zh">中方副校长</div></button>
@@ -613,13 +627,16 @@
     }
 
     function render(containerId, group, items) {
-      document.getElementById(containerId).innerHTML = items.map((item, i) => criterionHTML(group, item, i)).join("");
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = items.map((item, i) => criterionHTML(group, item, i)).join("");
     }
 
     function loadSubjectContent() {
-      const subject = document.getElementById("subjectSelect").value;
-      const profile = subjectProfiles[subject];
-      document.getElementById("leadBrief").textContent = profile.brief;
+      const subject = document.getElementById("subjectSelect")?.value || "esl";
+      const profile = subjectProfiles[subject] || subjectProfiles.esl;
+      const brief = document.getElementById("leadBrief");
+      if (brief) brief.textContent = profile.brief;
       render("leadCriteria", "lead", profile.criteria);
       render("localCriteria", "local", localCriteria);
       render("studentCriteria", "student", studentCriteria);
@@ -629,30 +646,41 @@
       calculateScore();
     }
 
+    function simpleEnterApp() {
+      const selected = document.getElementById("backupRoleSelect")?.value || "admin";
+      loginAs(selected);
+    }
+
     function loginAs(role) {
-      currentRole = role;
-      const name = document.getElementById("loginName").value.trim();
-      document.getElementById("loginScreen").classList.add("hidden");
-      document.getElementById("app").classList.remove("hidden");
-      document.getElementById("currentRoleLabel").textContent = roleLabels[role][0];
-      document.getElementById("currentRoleLabelZh").textContent = roleLabels[role][1];
-      loadSubjectContent();
-      if (name) {
-        if (role === "lead") document.getElementById("leadName").value = name;
-        if (role === "local") document.getElementById("localName").value = name;
-        if (role === "student") document.getElementById("studentName").value = name;
-        if (role === "collab") document.getElementById("collabName").value = name;
+      try {
+        currentRole = role;
+        const name = document.getElementById("loginName")?.value.trim() || "";
+        document.getElementById("loginScreen")?.classList.add("hidden");
+        document.getElementById("app")?.classList.remove("hidden");
+        document.getElementById("currentRoleLabel").textContent = roleLabels[role]?.[0] || role;
+        document.getElementById("currentRoleLabelZh").textContent = roleLabels[role]?.[1] || role;
+        loadSubjectContent();
+        if (name) {
+          if (role === "lead") document.getElementById("leadName").value = name;
+          if (role === "local") document.getElementById("localName").value = name;
+          if (role === "student") document.getElementById("studentName").value = name;
+          if (role === "collab") document.getElementById("collabName").value = name;
+        }
+        restoreData(getSavedData(), true);
+        applyRoleLocks();
+        calculateScore();
+        renderSemesterHistory();
+      } catch (error) {
+        console.error(error);
+        alert(`The page tried to open but hit an error. Please send the red Console error to ChatGPT.\n\n页面尝试打开时出现错误。请把Console红色错误发给ChatGPT。\n\n${error.message}`);
       }
-      restoreData(getSavedData(), true);
-      applyRoleLocks();
-      calculateScore();
     }
 
     function applyRoleLocks() {
       document.querySelectorAll("section[data-owner]").forEach(section => {
         const owner = section.dataset.owner;
         const note = section.querySelector(".lock-note");
-        const allowed = currentRole === "admin" || owner === currentRole || owner === "admin" && currentRole === "lead";
+        const allowed = currentRole === "admin" || owner === currentRole || (owner === "admin" && currentRole === "lead");
         section.classList.toggle("locked", !allowed);
         if (note) {
           note.classList.toggle("hidden", allowed);
@@ -665,46 +693,46 @@
       const inputs = [...document.querySelectorAll(`.score-input[data-group='${group}']`)];
       const values = inputs.map(i => i.value === "" ? null : Number(i.value)).filter(v => v !== null);
       if (!values.length) return 0;
-      return Math.round(values.reduce((a,b) => a+b, 0) / (values.length * 5) * 100);
+      return Math.round(values.reduce((a, b) => a + b, 0) / (values.length * 5) * 100);
     }
 
     function calculateScore() {
-      const lead = average("lead"), local = average("local"), student = average("student"), collab = average("collab");
+      const lead = average("lead");
+      const local = average("local");
+      const student = average("student");
+      const collab = average("collab");
       const serious = document.getElementById("seriousConcern")?.value === "yes";
       const overall = serious ? 0 : Math.round(lead * 0.35 + local * 0.25 + student * 0.25 + collab * 0.15);
-      document.getElementById("leadScore").textContent = lead;
-      document.getElementById("localScore").textContent = local;
-      document.getElementById("studentScore").textContent = student;
-      document.getElementById("collabScore").textContent = collab;
-      document.getElementById("overallScore").textContent = overall;
+      if (document.getElementById("leadScore")) document.getElementById("leadScore").textContent = lead;
+      if (document.getElementById("localScore")) document.getElementById("localScore").textContent = local;
+      if (document.getElementById("studentScore")) document.getElementById("studentScore").textContent = student;
+      if (document.getElementById("collabScore")) document.getElementById("collabScore").textContent = collab;
+      if (document.getElementById("overallScore")) document.getElementById("overallScore").textContent = overall;
       const rating = serious ? "Serious Concern / Review Required 重大问题 / 需要复核" : overall >= 90 ? "Excellent 优秀" : overall >= 80 ? "Good 良好" : overall >= 70 ? "Meets Expectations 达到要求" : overall >= 60 ? "Developing 发展中" : overall > 0 ? "Performance Concern 绩效关注" : "Not yet scored 尚未评分";
-      document.getElementById("ratingText").textContent = rating;
+      if (document.getElementById("ratingText")) document.getElementById("ratingText").textContent = rating;
     }
 
     function collectData() {
-      const data = {
-        savedAt: new Date().toISOString(),
-        recordId: getRecordId(),
-        fields: {},
-        scores: []
-      };
+      const data = { savedAt: new Date().toISOString(), recordId: getRecordId(), fields: {}, scores: [] };
       document.querySelectorAll("input[id], select[id], textarea[id]").forEach(el => data.fields[el.id] = el.value);
       document.querySelectorAll(".score-input, .comment-input").forEach((el, i) => data.scores.push({ i, value: el.value }));
       return data;
     }
 
-    function restoreData(data, quiet=false) {
+    function restoreData(data, quiet = false) {
       if (!data) return;
       Object.entries(data.fields || {}).forEach(([id, value]) => {
         const el = document.getElementById(id);
         if (el) el.value = value;
       });
-      if (data.fields?.subjectSelect && document.getElementById("subjectSelect").value !== data.fields.subjectSelect && !quiet) {
+      if (data.fields?.subjectSelect && document.getElementById("subjectSelect")?.value !== data.fields.subjectSelect && !quiet) {
         document.getElementById("subjectSelect").value = data.fields.subjectSelect;
         loadSubjectContent();
       }
       const dynamic = [...document.querySelectorAll(".score-input, .comment-input")];
-      (data.scores || []).forEach(item => { if (dynamic[item.i]) dynamic[item.i].value = item.value; });
+      (data.scores || []).forEach(item => {
+        if (dynamic[item.i]) dynamic[item.i].value = item.value;
+      });
       calculateScore();
     }
 
@@ -734,22 +762,16 @@
       setHistory(history);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       renderSemesterHistory();
-      alert("Semester record saved.
-
-学期记录已保存。
-
-Record: " + data.recordId);
+      alert(`Semester record saved.\n\n学期记录已保存。\n\nRecord: ${data.recordId}`);
     }
 
     function saveLocal() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(collectData()));
-      alert("Quick saved on this computer. 快速保存到本机。
-
-For semester archive, use Save Semester Record. 如需保存为学期记录，请点击“保存学期记录”。");
+      alert("Quick saved on this computer. 快速保存到本机。\n\nFor semester archive, use Save Semester Record. 如需保存为学期记录，请点击“保存学期记录”。");
     }
 
     function autoSaveQuiet() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(collectData()));
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(collectData())); } catch (e) { console.warn(e); }
     }
 
     function exportJSON() {
@@ -767,13 +789,11 @@ For semester archive, use Save Semester Record. 如需保存为学期记录，�
     }
 
     function encodeReviewData(data) {
-      const json = JSON.stringify(data);
-      return btoa(unescape(encodeURIComponent(json)));
+      return btoa(unescape(encodeURIComponent(JSON.stringify(data))));
     }
 
     function decodeReviewData(encoded) {
-      const json = decodeURIComponent(escape(atob(encoded)));
-      return JSON.parse(json);
+      return JSON.parse(decodeURIComponent(escape(atob(encoded))));
     }
 
     function createShareLink() {
@@ -781,21 +801,12 @@ For semester archive, use Save Semester Record. 如需保存为学期记录，�
       const encoded = encodeReviewData(data);
       const base = window.location.href.split("#")[0];
       const link = `${base}#review=${encoded}`;
-
       if (link.length > 18000) {
-        alert("This review is getting too large for a reliable share link. Please use Export Saved File instead.
-
-此考核内容较多，链接可能过长。请使用“导出文件”。");
+        alert("This review is getting too large for a reliable share link. Please use Export Saved File instead.\n\n此考核内容较多，链接可能过长。请使用“导出文件”。");
         return;
       }
-
       navigator.clipboard.writeText(link).then(() => {
-        alert("Saved review link copied. Send this link to the next reviewer.
-
-保存链接已复制。请发送给下一位评审。
-
-Important: this stores the review data inside the link, not in a real database.
-注意：数据保存在链接中，不是在真实数据库中。");
+        alert("Saved review link copied. Send this link to the next reviewer.\n\n保存链接已复制。请发送给下一位评审。\n\nImportant: this stores the review data inside the link, not in a real database.\n注意：数据保存在链接中，不是在真实数据库中。");
       }).catch(() => {
         prompt("Copy this saved review link / 请复制此保存链接:", link);
       });
@@ -804,9 +815,7 @@ Important: this stores the review data inside the link, not in a real database.
     function loadFromShareLink() {
       const hash = window.location.hash || "";
       if (!hash.startsWith("#review=")) {
-        alert("No saved review data found in the link.
-
-链接中没有找到已保存的考核数据。");
+        alert("No saved review data found in the link.\n\n链接中没有找到已保存的考核数据。");
         return;
       }
       try {
@@ -816,21 +825,15 @@ Important: this stores the review data inside the link, not in a real database.
         if (data.fields?.subjectSelect && document.getElementById("subjectSelect")) {
           document.getElementById("subjectSelect").value = data.fields.subjectSelect;
         }
-        if (document.getElementById("app").classList.contains("hidden")) {
-          alert("Review data found. Please log in with your reviewer role, then the saved review will load.
-
-已找到考核数据。请先选择您的评审角色登录，之后数据会自动加载。");
+        if (document.getElementById("app")?.classList.contains("hidden")) {
+          alert("Review data found. Please log in with your reviewer role, then the saved review will load.\n\n已找到考核数据。请先选择您的评审角色登录，之后数据会自动加载。");
         } else {
           loadSubjectContent();
           restoreData(data);
-          alert("Saved review loaded from link.
-
-已从链接加载考核数据。");
+          alert("Saved review loaded from link.\n\n已从链接加载考核数据。");
         }
       } catch (e) {
-        alert("Could not load the saved review link. It may be damaged or too long.
-
-无法加载保存链接，链接可能损坏或过长。");
+        alert("Could not load the saved review link. It may be damaged or too long.\n\n无法加载保存链接，链接可能损坏或过长。");
       }
     }
 
@@ -843,9 +846,7 @@ Important: this stores the review data inside the link, not in a real database.
           const data = JSON.parse(reader.result);
           if (data.allSemesterRecords) {
             setHistory(data.allSemesterRecords);
-            alert("All semester records imported.
-
-已导入全部学期记录。");
+            alert("All semester records imported.\n\n已导入全部学期记录。");
             renderSemesterHistory();
             return;
           }
@@ -853,7 +854,9 @@ Important: this stores the review data inside the link, not in a real database.
           const history = getHistory();
           history[data.recordId || getRecordId()] = data;
           setHistory(history);
-          if (data.fields?.subjectSelect) document.getElementById("subjectSelect").value = data.fields.subjectSelect;
+          if (data.fields?.subjectSelect && document.getElementById("subjectSelect")) {
+            document.getElementById("subjectSelect").value = data.fields.subjectSelect;
+          }
           loadSubjectContent();
           restoreData(data);
           renderSemesterHistory();
@@ -894,16 +897,16 @@ Important: this stores the review data inside the link, not in a real database.
       const data = history[recordId];
       if (!data) return alert("Record not found. 找不到记录。");
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      if (data.fields?.subjectSelect) document.getElementById("subjectSelect").value = data.fields.subjectSelect;
+      if (data.fields?.subjectSelect && document.getElementById("subjectSelect")) {
+        document.getElementById("subjectSelect").value = data.fields.subjectSelect;
+      }
       loadSubjectContent();
       restoreData(data);
       alert("Semester record loaded. 已加载学期记录。");
     }
 
     function deleteSemesterRecord(recordId) {
-      if (!confirm("Delete this semester record?
-
-是否删除此学期记录？")) return;
+      if (!confirm("Delete this semester record?\n\n是否删除此学期记录？")) return;
       const history = getHistory();
       delete history[recordId];
       setHistory(history);
@@ -924,21 +927,19 @@ Important: this stores the review data inside the link, not in a real database.
       return [...document.querySelectorAll(`.score-input[data-group='${group}']`)].map(input => {
         const card = input.closest(".criterion");
         return {
-          title: card.querySelector(".criterion-title").textContent,
-          expectation: card.querySelector(".criterion-help").textContent,
-          evidence: card.querySelector(".evidence-prompt").textContent,
+          title: card.querySelector(".criterion-title")?.textContent || "",
+          expectation: card.querySelector(".criterion-help")?.textContent || "",
+          evidence: card.querySelector(".evidence-prompt")?.textContent || "",
           score: input.value || "Not scored 未评分",
-          comment: card.querySelector(".comment-input").value || ""
+          comment: card.querySelector(".comment-input")?.value || ""
         };
       });
     }
 
     function generateSummary() {
       calculateScore();
-      const subject = subjectProfiles[document.getElementById("subjectSelect").value].label;
-      const summary = `International Teacher Review 国际教师考核\n\nTeacher 教师: ${document.getElementById("teacherName").value || "Not provided 未填写"}\nSubject 学科: ${subject}\nGrade 年级: ${document.getElementById("gradeLevel").value || "Not provided 未填写"}\nReview Period 考核周期: ${document.getElementById("reviewPeriod").value || "Not provided 未填写"}
-Academic Year 学年: ${document.getElementById("academicYear").value || "Not provided 未填写"}
-Semester 学期: ${document.getElementById("semester").value === "S2" ? "Semester 2 第二学期" : "Semester 1 第一学期"}\n\nReviewer Ownership 评审责任:\n1. Lead Reviewer / International Head 主评审 / 国际负责人: ${document.getElementById("leadName").value || "Not provided 未填写"}\n2. Chinese Vice Principal 中方副校长: ${document.getElementById("localName").value || "Not provided 未填写"}\n3. Student Development Centre 学生发展中心: ${document.getElementById("studentName").value || "Not provided 未填写"}\n4. Homeroom / Co-Teacher 班主任 / 协同教师: ${document.getElementById("collabName").value || "Not provided 未填写"}\n\nScores 分数:\n- International Academic Review 国际学术评审: ${document.getElementById("leadScore").textContent}%\n- Local Leadership Review 本地管理评审: ${document.getElementById("localScore").textContent}%\n- Student Development Review 学生发展评审: ${document.getElementById("studentScore").textContent}%\n- Collaboration Review 协作评审: ${document.getElementById("collabScore").textContent}%\n\nOverall 总分: ${document.getElementById("overallScore").textContent}%\nRating 等级: ${document.getElementById("ratingText").textContent}\n\nKey Strengths 主要优势:\n${document.getElementById("strengths").value || "Not provided 未填写"}\n\nAreas for Development 发展方向:\n${document.getElementById("development").value || "Not provided 未填写"}\n\nNext Steps 下一步行动:\n${document.getElementById("nextSteps").value || "Not provided 未填写"}\n\nSerious Concern 重大问题:\n${document.getElementById("seriousConcern").value === "yes" ? "Yes 是" : "No 否"}\n${document.getElementById("seriousNotes").value || ""}`;
+      const subject = subjectProfiles[document.getElementById("subjectSelect")?.value || "esl"].label;
+      const summary = `International Teacher Review 国际教师考核\n\nTeacher 教师: ${document.getElementById("teacherName")?.value || "Not provided 未填写"}\nSubject 学科: ${subject}\nGrade 年级: ${document.getElementById("gradeLevel")?.value || "Not provided 未填写"}\nReview Period 考核周期: ${document.getElementById("reviewPeriod")?.value || "Not provided 未填写"}\nAcademic Year 学年: ${document.getElementById("academicYear")?.value || "Not provided 未填写"}\nSemester 学期: ${document.getElementById("semester")?.value === "S2" ? "Semester 2 第二学期" : "Semester 1 第一学期"}\n\nReviewer Ownership 评审责任:\n1. Lead Reviewer / International Head 主评审 / 国际负责人: ${document.getElementById("leadName")?.value || "Not provided 未填写"}\n2. Chinese Vice Principal 中方副校长: ${document.getElementById("localName")?.value || "Not provided 未填写"}\n3. Student Development Centre 学生发展中心: ${document.getElementById("studentName")?.value || "Not provided 未填写"}\n4. Homeroom / Co-Teacher 班主任 / 协同教师: ${document.getElementById("collabName")?.value || "Not provided 未填写"}\n\nScores 分数:\n- International Academic Review 国际学术评审: ${document.getElementById("leadScore")?.textContent || "0"}%\n- Local Leadership Review 本地管理评审: ${document.getElementById("localScore")?.textContent || "0"}%\n- Student Development Review 学生发展评审: ${document.getElementById("studentScore")?.textContent || "0"}%\n- Collaboration Review 协作评审: ${document.getElementById("collabScore")?.textContent || "0"}%\n\nOverall 总分: ${document.getElementById("overallScore")?.textContent || "0"}%\nRating 等级: ${document.getElementById("ratingText")?.textContent || "Not yet scored 尚未评分"}\n\nKey Strengths 主要优势:\n${document.getElementById("strengths")?.value || "Not provided 未填写"}\n\nAreas for Development 发展方向:\n${document.getElementById("development")?.value || "Not provided 未填写"}\n\nNext Steps 下一步行动:\n${document.getElementById("nextSteps")?.value || "Not provided 未填写"}\n\nSerious Concern 重大问题:\n${document.getElementById("seriousConcern")?.value === "yes" ? "Yes 是" : "No 否"}\n${document.getElementById("seriousNotes")?.value || ""}`;
       document.getElementById("summaryOutput").textContent = summary;
       return summary;
     }
@@ -960,22 +961,20 @@ Semester 学期: ${document.getElementById("semester").value === "S2" ? "Semeste
 
     function logout() {
       currentRole = null;
-      document.getElementById("app").classList.add("hidden");
-      document.getElementById("loginScreen").classList.remove("hidden");
+      document.getElementById("app")?.classList.add("hidden");
+      document.getElementById("loginScreen")?.classList.remove("hidden");
     }
 
-    window.addEventListener("input", e => { if (e.target.matches("input, textarea, select")) autoSaveQuiet(); });
+    window.addEventListener("input", e => {
+      if (e.target.matches("input, textarea, select")) autoSaveQuiet();
+    });
 
     window.addEventListener("DOMContentLoaded", () => {
       document.querySelectorAll(".role-card[data-role]").forEach(card => {
         card.addEventListener("click", () => loginAs(card.dataset.role));
       });
-
       renderSemesterHistory();
-
-      if ((window.location.hash || "").startsWith("#review=")) {
-        loadFromShareLink();
-      }
+      if ((window.location.hash || "").startsWith("#review=")) loadFromShareLink();
     });
   </script>
 </body>
