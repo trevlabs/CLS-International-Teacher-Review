@@ -169,7 +169,13 @@
       padding: 16px;
       cursor: pointer;
       background: #fff;
+      color: #111827;
       transition: 0.15s ease;
+      display: block;
+      width: 100%;
+      text-align: left;
+      font-size: 16px;
+      font-weight: normal;
     }
 
     .role-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(15,23,42,0.08); }
@@ -284,11 +290,11 @@
       </div>
 
       <div class="role-grid">
-        <div class="role-card role-lead" onclick="loginAs('lead')"><strong>Lead Reviewer / International Head</strong><div class="zh">主评审 / 国际负责人</div></div>
-        <div class="role-card role-local" onclick="loginAs('local')"><strong>Chinese Vice Principal</strong><div class="zh">中方副校长</div></div>
-        <div class="role-card role-student" onclick="loginAs('student')"><strong>Student Development Centre</strong><div class="zh">学生发展中心</div></div>
-        <div class="role-card role-collab" onclick="loginAs('collab')"><strong>Homeroom / Co-Teacher</strong><div class="zh">班主任 / 协同教师</div></div>
-        <div class="role-card role-admin" onclick="loginAs('admin')"><strong>Admin / View All</strong><div class="zh">管理员 / 查看全部</div></div>
+        <button type="button" class="role-card role-lead" data-role="lead"><strong>Lead Reviewer / International Head</strong><div class="zh">主评审 / 国际负责人</div></button>
+        <button type="button" class="role-card role-local" data-role="local"><strong>Chinese Vice Principal</strong><div class="zh">中方副校长</div></button>
+        <button type="button" class="role-card role-student" data-role="student"><strong>Student Development Centre</strong><div class="zh">学生发展中心</div></button>
+        <button type="button" class="role-card role-collab" data-role="collab"><strong>Homeroom / Co-Teacher</strong><div class="zh">班主任 / 协同教师</div></button>
+        <button type="button" class="role-card role-admin" data-role="admin"><strong>Admin / View All</strong><div class="zh">管理员 / 查看全部</div></button>
       </div>
 
       <div class="button-row">
@@ -961,7 +967,12 @@ Semester 学期: ${document.getElementById("semester").value === "S2" ? "Semeste
     window.addEventListener("input", e => { if (e.target.matches("input, textarea, select")) autoSaveQuiet(); });
 
     window.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".role-card[data-role]").forEach(card => {
+        card.addEventListener("click", () => loginAs(card.dataset.role));
+      });
+
       renderSemesterHistory();
+
       if ((window.location.hash || "").startsWith("#review=")) {
         loadFromShareLink();
       }
