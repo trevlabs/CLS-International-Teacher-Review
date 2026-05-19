@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>International Teacher Review Tool 国际教师考核工具</title>
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --lead: #4f46e5;
+      --local: #0891b2;
+      --student: #16a34a;
+      --collab: #d97706;
+      --shared: #7c3aed;
+      --danger: #dc2626;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .app {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+
+    .login-screen {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      background: linear-gradient(135deg, #eef2ff, #ecfeff, #f0fdf4);
+    }
+
+    .login-card {
+      width: min(760px, 100%);
+      background: white;
+      border-radius: 28px;
+      padding: 34px;
+      box-shadow: 0 20px 70px rgba(15, 23, 42, 0.12);
+      border: 1px solid rgba(229, 231, 235, 0.9);
+    }
+
+    .login-card h1 {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.1;
+    }
+
+    .zh {
+      color: #475569;
+      font-size: 0.92em;
+      margin-top: 3px;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #111827, #312e81 55%, #4f46e5);
+      color: white;
+      border-radius: 28px;
+      padding: 30px;
+      margin-bottom: 22px;
+      box-shadow: 0 16px 40px rgba(49, 46, 129, 0.24);
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.1;
+    }
+
+    header p { color: rgba(255,255,255,0.84); margin: 0; max-width: 980px; }
+
+    .top-actions, .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    button, .file-button {
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 17px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      background: #4f46e5;
+      color: white;
+      transition: 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    button:hover, .file-button:hover { transform: translateY(-1px); filter: brightness(0.95); }
+    button.secondary { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25); }
+    button.light { background: #f8fafc; color: #111827; border: 1px solid var(--line); }
+    button.danger { background: var(--danger); }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: 11px 12px;
+      font-size: 14px;
+      color: var(--ink);
+      background: white;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+    }
+
+    textarea { min-height: 88px; resize: vertical; }
+    label { display: block; font-size: 13px; font-weight: 900; margin-bottom: 6px; }
+    .form-row { margin-bottom: 14px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 390px 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+      border: 1px solid rgba(229, 231, 235, 0.9);
+      margin-bottom: 22px;
+    }
+
+    .sticky { position: sticky; top: 18px; }
+    h2 { margin: 0 0 14px; font-size: 22px; }
+    h3 { margin: 20px 0 10px; font-size: 17px; }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .role-card {
+      border: 2px solid var(--line);
+      border-left-width: 9px;
+      border-radius: 18px;
+      padding: 16px;
+      cursor: pointer;
+      background: #fff;
+      transition: 0.15s ease;
+    }
+
+    .role-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(15,23,42,0.08); }
+    .role-lead { border-left-color: var(--lead); }
+    .role-local { border-left-color: var(--local); }
+    .role-student { border-left-color: var(--student); }
+    .role-collab { border-left-color: var(--collab); }
+    .role-admin { border-left-color: var(--shared); }
+
+    .section {
+      border-left: 14px solid var(--section-colour);
+      padding-top: 0;
+      overflow: hidden;
+    }
+
+    .section-banner {
+      background: var(--section-colour);
+      color: white;
+      margin: -22px -22px 20px -22px;
+      padding: 16px 22px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .section-banner h2 { margin: 0; color: white; }
+    .section-banner .zh { color: rgba(255,255,255,0.9); }
+    .section-banner .owner { font-weight: 900; font-size: 13px; background: rgba(255,255,255,0.18); padding: 7px 10px; border-radius: 999px; }
+
+    .lead-section { --section-colour: var(--lead); }
+    .local-section { --section-colour: var(--local); }
+    .student-section { --section-colour: var(--student); }
+    .collab-section { --section-colour: var(--collab); }
+    .shared-section { --section-colour: var(--shared); }
+
+    .reviewer-chip {
+      display: grid;
+      grid-template-columns: 16px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 11px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: #f8fafc;
+      margin-bottom: 10px;
+    }
+
+    .dot { width: 16px; height: 16px; border-radius: 999px; margin-top: 3px; background: var(--dot); }
+    .dot-lead { --dot: var(--lead); }
+    .dot-local { --dot: var(--local); }
+    .dot-student { --dot: var(--student); }
+    .dot-collab { --dot: var(--collab); }
+    .dot-shared { --dot: var(--shared); }
+
+    .score-panel {
+      background: #eef2ff;
+      border-radius: 18px;
+      padding: 18px;
+      margin-top: 18px;
+    }
+
+    .big-score { font-size: 52px; line-height: 1; font-weight: 900; color: #312e81; margin: 8px 0 4px; }
+    .rating { font-weight: 900; font-size: 18px; }
+    .breakdown { margin-top: 12px; display: grid; gap: 8px; font-size: 14px; }
+    .breakdown-row { display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(67,56,202,0.25); padding-bottom: 6px; gap: 12px; }
+
+    .criteria-list { display: grid; gap: 14px; }
+    .criterion { border: 1px solid var(--line); border-radius: 18px; padding: 16px; background: white; }
+    .criterion-top { display: grid; grid-template-columns: 1fr 160px; gap: 14px; align-items: start; }
+    .criterion-title { font-weight: 900; margin-bottom: 4px; }
+    .criterion-help { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+    .evidence-prompt { background: #f9fafb; border: 1px dashed #d1d5db; border-radius: 12px; padding: 9px 10px; color: #4b5563; font-size: 13px; margin-bottom: 12px; }
+
+    .notice { background: #fff7ed; border: 1px solid #fed7aa; color: #7c2d12; padding: 14px; border-radius: 16px; margin-bottom: 16px; font-size: 14px; }
+    .locked { opacity: 0.58; }
+    .locked input, .locked select, .locked textarea { pointer-events: none; background: #f3f4f6; }
+    .lock-note { background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; padding: 10px 12px; border-radius: 14px; margin-bottom: 14px; font-size: 13px; font-weight: 800; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .hidden { display: none !important; }
+    .summary-box { white-space: pre-wrap; background: #f9fafb; border: 1px solid var(--line); border-radius: 16px; padding: 16px; min-height: 160px; font-size: 14px; }
+    .print-report { display: none; background: white; color: #111827; padding: 28px; font-size: 13px; }
+    .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .print-table th, .print-table td { border: 1px solid #ddd; padding: 8px; vertical-align: top; text-align: left; }
+
+    @media (max-width: 980px) {
+      .grid, .role-grid { grid-template-columns: 1fr; }
+      .sticky { position: static; }
+      .criterion-top { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { background: white; }
+      .app, .login-screen { display: none !important; }
+      .print-report { display: block !important; }
+    }
+  </style>
+</head>
+<body>
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <h1>International Teacher Review Login</h1>
+      <div class="zh">国际教师考核登录</div>
+      <p class="small">Choose your reviewer role. This prototype uses role-based access inside one HTML file. For a real secure login across devices, this would need a database/backend.</p>
+      <p class="small">请选择您的考核角色。本原型在单个HTML文件中使用角色访问控制。如需真正跨设备安全登录，需要数据库/后端系统。</p>
+
+      <div class="form-row">
+        <label>Your Name / 您的姓名</label>
+        <input id="loginName" placeholder="e.g. Trevor Stewart" />
+      </div>
+
+      <div class="role-grid">
+        <div class="role-card role-lead" onclick="loginAs('lead')"><strong>Lead Reviewer / International Head</strong><div class="zh">主评审 / 国际负责人</div></div>
+        <div class="role-card role-local" onclick="loginAs('local')"><strong>Chinese Vice Principal</strong><div class="zh">中方副校长</div></div>
+        <div class="role-card role-student" onclick="loginAs('student')"><strong>Student Development Centre</strong><div class="zh">学生发展中心</div></div>
+        <div class="role-card role-collab" onclick="loginAs('collab')"><strong>Homeroom / Co-Teacher</strong><div class="zh">班主任 / 协同教师</div></div>
+        <div class="role-card role-admin" onclick="loginAs('admin')"><strong>Admin / View All</strong><div class="zh">管理员 / 查看全部</div></div>
+      </div>
+
+      <div class="button-row">
+        <label class="file-button light" for="importFromLogin">Import Saved Review / 导入已保存考核</label>
+        <input id="importFromLogin" type="file" accept="application/json" class="hidden" onchange="importJSON(event)" />
+        <button class="light" onclick="loadFromShareLink()">Load Review Link / 加载链接数据</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="app" class="app hidden">
+    <header>
+      <h1>International Teacher Performance & Scope Sequence Review</h1>
+      <div class="zh">国际教师绩效与范围序列考核</div>
+      <p>This bilingual review form is divided by reviewer responsibility. Each reviewer fills only their own colour-coded section, saves, exports the file, and passes it to the next reviewer.</p>
+      <p class="zh">此双语考核表按评审责任分区。每位评审只填写自己负责的颜色区域，保存后导出文件，再发送给下一位评审。</p>
+      <div class="top-actions">
+        <button onclick="saveSemesterRecord()">Save Semester Record 保存学期记录</button>
+        <button onclick="saveLocal()">Quick Save 本机快速保存</button>
+        <button onclick="exportJSON()">Export Saved File 导出文件</button>
+        <button onclick="createShareLink()">Create Saved Review Link 生成保存链接</button>
+        <label class="file-button secondary" for="importFile">Import File 导入文件</label>
+        <input id="importFile" type="file" accept="application/json" class="hidden" onchange="importJSON(event)" />
+        <button class="secondary" onclick="generateSummary()">Generate Summary 生成总结</button>
+        <button class="secondary" onclick="printCleanReport()">Print 打印</button>
+        <button class="secondary" onclick="logout()">Change Role 更换角色</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <aside class="card sticky">
+        <h2>Review Setup</h2>
+        <div class="zh">考核设置</div>
+        <p class="small"><strong>Current role:</strong> <span id="currentRoleLabel"></span></p>
+        <p class="small zh"><strong>当前角色：</strong><span id="currentRoleLabelZh"></span></p>
+
+        <div class="form-row">
+          <label>Teacher Name / 教师姓名</label>
+          <input id="teacherName" data-save="meta" placeholder="e.g. Mark Smith" />
+        </div>
+
+        <div class="two-col">
+          <div class="form-row">
+            <label>Grade / 年级</label>
+            <input id="gradeLevel" data-save="meta" placeholder="e.g. Grade 7" />
+          </div>
+          <div class="form-row">
+            <label>Review Period / 考核周期</label>
+            <input id="reviewPeriod" data-save="meta" placeholder="e.g. May 2026" />
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="form-row">
+            <label>Academic Year / 学年</label>
+            <input id="academicYear" data-save="meta" placeholder="e.g. 2026-2027" />
+          </div>
+          <div class="form-row">
+            <label>Semester / 学期</label>
+            <select id="semester" data-save="meta" onchange="autoSaveQuiet()">
+              <option value="S1">Semester 1 第一学期</option>
+              <option value="S2">Semester 2 第二学期</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label>Department / 部门</label>
+          <select id="department" data-save="meta">
+            <option>International Department 国际部</option>
+            <option>Primary International Programme 小学国际项目</option>
+            <option>MYP Department MYP部门</option>
+            <option>ESL Department ESL部门</option>
+            <option>STEM Department STEM部门</option>
+            <option>English Department 英文部</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label>Subject / 学科</label>
+          <select id="subjectSelect" data-save="meta" onchange="loadSubjectContent(); calculateScore(); autoSaveQuiet();">
+            <option value="esl">ESL 英语作为第二语言</option>
+            <option value="drama">Drama 戏剧</option>
+            <option value="science">Science 科学</option>
+            <option value="maths">Maths 数学</option>
+            <option value="geography">Geography 地理</option>
+            <option value="stem">STEM STEM课程</option>
+            <option value="english_subject">English Subject Classes 英语学科课</option>
+            <option value="language_literature">English Language and Literature 英语语言与文学</option>
+          </select>
+        </div>
+
+        <h3>Reviewer Ownership</h3>
+        <div class="zh">评审责任分工</div>
+        <div class="reviewer-chip"><span class="dot dot-lead"></span><div><strong>Section 1: Lead Reviewer</strong><div class="zh">第一部分：主评审 / 国际负责人</div><input id="leadName" data-save="meta" placeholder="Name 姓名" /></div></div>
+        <div class="reviewer-chip"><span class="dot dot-local"></span><div><strong>Section 2: Chinese Vice Principal</strong><div class="zh">第二部分：中方副校长</div><input id="localName" data-save="meta" placeholder="Name 姓名" /></div></div>
+        <div class="reviewer-chip"><span class="dot dot-student"></span><div><strong>Section 3: Student Development</strong><div class="zh">第三部分：学生发展中心</div><input id="studentName" data-save="meta" placeholder="Name 姓名" /></div></div>
+        <div class="reviewer-chip"><span class="dot dot-collab"></span><div><strong>Section 4: Homeroom / Co-Teacher</strong><div class="zh">第四部分：班主任 / 协同教师</div><input id="collabName" data-save="meta" placeholder="Name 姓名" /></div></div>
+
+        <div class="score-panel">
+          <div class="small">Overall Score / 总分</div>
+          <div class="big-score"><span id="overallScore">0</span>%</div>
+          <div id="ratingText" class="rating">Not yet scored 尚未评分</div>
+          <div class="breakdown">
+            <div class="breakdown-row"><span>Academic 学术</span><strong><span id="leadScore">0</span>%</strong></div>
+            <div class="breakdown-row"><span>Local Leadership 本地管理</span><strong><span id="localScore">0</span>%</strong></div>
+            <div class="breakdown-row"><span>Student Development 学生发展</span><strong><span id="studentScore">0</span>%</strong></div>
+            <div class="breakdown-row"><span>Collaboration 协作</span><strong><span id="collabScore">0</span>%</strong></div>
+          </div>
+        </div>
+
+        <div class="card" style="box-shadow:none; margin-top:18px; padding:16px;">
+          <h3>Saved Semester Records</h3>
+          <div class="zh">已保存学期记录</div>
+          <p class="small">Saved records are stored in this browser. Export JSON or create a saved link to share with others.</p>
+          <p class="small zh">记录保存在当前浏览器中。如需分享，请导出JSON或生成保存链接。</p>
+          <div class="button-row">
+            <button class="light" onclick="renderSemesterHistory()">Refresh 刷新</button>
+            <button class="light" onclick="exportAllSemesterRecords()">Export All 导出全部</button>
+          </div>
+          <div id="semesterHistory" class="small" style="margin-top:12px;"></div>
+        </div>
+      </aside>
+
+      <main>
+        <section id="section-lead" class="card section lead-section" data-owner="lead">
+          <div class="section-banner"><div><h2>1. International Academic Review</h2><div class="zh">国际学术评审</div></div><div class="owner">Lead Reviewer / International Head 主评审 / 国际负责人</div></div>
+          <div class="lock-note hidden"></div>
+          <div id="leadBrief" class="notice"></div>
+          <div id="leadCriteria" class="criteria-list"></div>
+        </section>
+
+        <section id="section-local" class="card section local-section" data-owner="local">
+          <div class="section-banner"><div><h2>2. Local Leadership & School Alignment Review</h2><div class="zh">本地管理与学校要求一致性评审</div></div><div class="owner">Chinese Vice Principal 中方副校长</div></div>
+          <div class="lock-note hidden"></div>
+          <div class="notice"><strong>Focus:</strong> school systems, local expectations, parent confidence, communication, public-facing work and team cooperation.<div class="zh"><strong>重点：</strong>学校制度、本地要求、家长信任、沟通、对外活动以及团队配合。</div></div>
+          <div id="localCriteria" class="criteria-list"></div>
+        </section>
+
+        <section id="section-student" class="card section student-section" data-owner="student">
+          <div class="section-banner"><div><h2>3. Student Development & Pastoral Review</h2><div class="zh">学生发展与德育支持评审</div></div><div class="owner">Student Development Centre 学生发展中心</div></div>
+          <div class="lock-note hidden"></div>
+          <div class="notice"><strong>Focus:</strong> classroom behaviour, safety, wellbeing, attendance cooperation, student routines and behaviour follow-up.<div class="zh"><strong>重点：</strong>课堂行为、安全、学生身心发展、考勤配合、学生常规和行为跟进。</div></div>
+          <div id="studentCriteria" class="criteria-list"></div>
+        </section>
+
+        <section id="section-collab" class="card section collab-section" data-owner="collab">
+          <div class="section-banner"><div><h2>4. Homeroom / Co-Teacher Collaboration Review</h2><div class="zh">班主任 / 协同教师协作评审</div></div><div class="owner">Homeroom / Co-Teacher 班主任 / 协同教师</div></div>
+          <div class="lock-note hidden"></div>
+          <div class="notice"><strong>Focus:</strong> daily classroom cooperation, co-planning, student response, homework follow-up and support for different student levels.<div class="zh"><strong>重点：</strong>日常课堂配合、共同备课、学生反应、作业跟进以及不同层次学生支持。</div></div>
+          <div id="collabCriteria" class="criteria-list"></div>
+        </section>
+
+        <section id="section-shared" class="card section shared-section" data-owner="admin">
+          <div class="section-banner"><div><h2>5. Final Summary & Action Plan</h2><div class="zh">最终总结与行动计划</div></div><div class="owner">Admin / Lead Finalisation 管理员 / 主评审最终确认</div></div>
+          <div class="lock-note hidden"></div>
+          <div class="form-row"><label>Key Strengths / 主要优势</label><textarea id="strengths" data-save="shared" placeholder="English first, then Chinese if needed. 先英文，必要时再中文。"></textarea></div>
+          <div class="form-row"><label>Areas for Development / 发展方向</label><textarea id="development" data-save="shared"></textarea></div>
+          <div class="form-row"><label>Next Steps / 下一步行动</label><textarea id="nextSteps" data-save="shared"></textarea></div>
+          <div class="form-row"><label>Serious Concern / 一票否决或重大问题</label><select id="seriousConcern" data-save="shared" onchange="calculateScore(); autoSaveQuiet();"><option value="no">No 否</option><option value="yes">Yes 是</option></select></div>
+          <div class="form-row"><label>Serious Concern Details / 重大问题说明</label><textarea id="seriousNotes" data-save="shared"></textarea></div>
+        </section>
+
+        <section class="card">
+          <h2>Generated Review Summary</h2>
+          <div class="zh">生成的考核总结</div>
+          <div class="button-row"><button onclick="generateSummary()">Refresh Summary 刷新总结</button><button class="light" onclick="copySummary()">Copy Summary 复制总结</button></div>
+          <div id="summaryOutput" class="summary-box">Click “Generate Summary”. 点击“生成总结”。</div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div id="printReport" class="print-report"></div>
+
+  <script>
+    let currentRole = null;
+    const STORAGE_KEY = "cls_international_teacher_review_v2";
+    const HISTORY_KEY = "cls_international_teacher_review_semester_history_v1";
+
+    const roleLabels = {
+      lead: ["Lead Reviewer / International Head", "主评审 / 国际负责人"],
+      local: ["Chinese Vice Principal", "中方副校长"],
+      student: ["Student Development Centre", "学生发展中心"],
+      collab: ["Homeroom / Co-Teacher", "班主任 / 协同教师"],
+      admin: ["Admin / View All", "管理员 / 查看全部"]
+    };
+
+    const scoreOptions = `
+      <option value="">Select 请选择</option>
+      <option value="5">5 - Excellent 优秀</option>
+      <option value="4">4 - Good 良好</option>
+      <option value="3">3 - Meets Expectations 达到要求</option>
+      <option value="2">2 - Needs Improvement 需要改进</option>
+      <option value="1">1 - Serious Concern 严重关注</option>
+      <option value="0">0 - Not Evident 未体现</option>
+    `;
+
+    const subjectProfiles = {
+      esl: {
+        label: "ESL 英语作为第二语言",
+        brief: "ESL focus: language acquisition, student speaking time, vocabulary recycling, grammar in context, differentiated support and progress across listening, speaking, reading and writing.\nESL重点：语言习得、学生开口时间、词汇复现、语境中的语法、分层支持以及听说读写进步。",
+        criteria: [
+          ["Language objectives and progression / 语言目标与进阶", "Lessons identify what students should be able to say, understand, read or write. / 课堂明确学生应会说、会理解、会读或会写的内容。", "Evidence 证据: lesson objectives, sentence frames, speaking tasks, writing samples."],
+          ["Balanced language skills / 听说读写均衡", "The unit develops speaking, listening, reading and writing. / 单元能发展听、说、读、写能力。", "Evidence 证据: oral tasks, reading texts, listening tasks, written outcomes."],
+          ["Vocabulary and grammar in context / 语境中的词汇与语法", "Language is practised in meaningful communication. / 语言点通过真实或有意义的交流练习。", "Evidence 证据: vocabulary review, model sentences, corrected work."],
+          ["Assessment matched to language level / 评估符合语言水平", "Assessment is accessible but challenging. / 评估既可达到又有挑战。", "Evidence 证据: rubrics, differentiated tasks, speaking/writing records."]
+        ]
+      },
+      drama: {
+        label: "Drama 戏剧",
+        brief: "Drama focus: confidence, voice, movement, character, rehearsal, collaboration, reflection and final performance.\n戏剧重点：自信、声音、肢体、角色、排练、合作、反思和最终表演。",
+        criteria: [
+          ["Performance skill progression / 表演技能进阶", "Lessons move from confidence-building to rehearsal and performance. / 课程从建立自信逐步过渡到排练与表演。", "Evidence 证据: rehearsal notes, performance videos, skill checklists."],
+          ["Voice, movement and expression / 声音、肢体与表达", "Students practise projection, articulation, gesture and stage presence. / 学生练习投射、吐字、动作和舞台表现。", "Evidence 证据: observation notes, rehearsal feedback, performance rubric."],
+          ["Collaboration and ensemble work / 合作与集体表演", "Students listen, respond and build ideas together. / 学生倾听、回应并共同发展想法。", "Evidence 证据: group rehearsal notes, peer feedback."],
+          ["Reflection and performance outcome / 反思与表演成果", "Students evaluate and improve before final performance. / 学生在最终表演前进行评价和改进。", "Evidence 证据: self-reflection, final performance, rubric."]
+        ]
+      },
+      science: {
+        label: "Science 科学",
+        brief: "Science focus: conceptual understanding, practical inquiry, safe experiments, scientific vocabulary, data and evidence-based explanation.\n科学重点：概念理解、实践探究、安全实验、科学词汇、数据和基于证据的解释。",
+        criteria: [
+          ["Conceptual sequence / 概念序列", "Knowledge builds logically from prior understanding to investigation and application. / 知识从已有理解逐步发展到探究和应用。", "Evidence 证据: unit sequence, notebooks, concept checks."],
+          ["Practical inquiry / 实践探究", "Students observe, predict, test, record and conclude. / 学生观察、预测、测试、记录并得出结论。", "Evidence 证据: lab sheets, data tables, practical photos."],
+          ["Scientific vocabulary and explanation / 科学词汇与解释", "Students explain processes using accurate scientific language. / 学生用准确科学语言解释过程。", "Evidence 证据: written explanations, labelled diagrams."],
+          ["Safety and data use / 安全与数据使用", "Practical work is safe and students use data to support conclusions. / 实验安全，学生用数据支持结论。", "Evidence 证据: safety routines, graphs, conclusions."]
+        ]
+      },
+      maths: {
+        label: "Maths 数学",
+        brief: "Maths focus: conceptual clarity, fluency, reasoning, problem-solving, models, vocabulary and differentiation.\n数学重点：概念清晰、熟练度、推理、问题解决、模型、词汇和分层。",
+        criteria: [
+          ["Logical concept progression / 概念逻辑进阶", "Lessons move from prior knowledge to new method, practice and application. / 课堂从旧知到新方法、练习与应用。", "Evidence 证据: worked examples, lesson sequence, student books."],
+          ["Fluency and accuracy / 熟练度与准确性", "Students practise enough to become confident and accurate. / 学生通过充分练习建立信心和准确性。", "Evidence 证据: classwork, quizzes, homework."],
+          ["Reasoning and explanation / 推理与解释", "Students justify answers and compare methods. / 学生证明答案并比较方法。", "Evidence 证据: reasoning questions, oral/written explanations."],
+          ["Problem-solving and differentiation / 问题解决与分层", "Tasks include support, core practice and challenge. / 任务包含支持、基础练习和挑战。", "Evidence 证据: tiered tasks, extension questions."]
+        ]
+      },
+      geography: {
+        label: "Geography 地理",
+        brief: "Geography focus: maps, place knowledge, physical and human geography, inquiry questions, case studies, sustainability and MYP I&S criteria where relevant.\n地理重点：地图、区域认知、自然与人文地理、探究问题、案例研究、可持续发展及相关MYP个人与社会标准。",
+        criteria: [
+          ["Unit sequence and place knowledge / 单元序列与区域认知", "Students understand location, region, scale, physical features and human activity. / 学生理解位置、区域、尺度、自然特征和人类活动。", "Evidence 证据: unit plan, regional case studies, student notebooks."],
+          ["Map skills and spatial thinking / 地图技能与空间思维", "Students practise location, scale, direction, symbols and regional comparison. / 学生练习位置、比例尺、方向、符号和区域比较。", "Evidence 证据: maps, atlas tasks, map quizzes."],
+          ["Inquiry and vocabulary / 探究与词汇", "Students use geographic terms and answer factual, conceptual and debatable questions. / 学生使用地理术语并回答事实性、概念性和争议性问题。", "Evidence 证据: inquiry questions, vocabulary tasks, exit tickets."],
+          ["Case studies and assessment / 案例研究与评估", "Students apply geography to real places and assessment criteria. / 学生将地理知识应用于真实地点和评估标准。", "Evidence 证据: case-study work, presentations, MYP rubrics."]
+        ]
+      },
+      stem: {
+        label: "STEM STEM课程",
+        brief: "STEM focus: hands-on design, coding, engineering, prototyping, testing, iteration, teamwork, safety and real-world problem-solving.\nSTEM重点：动手设计、编程、工程、原型制作、测试、迭代、团队合作、安全和真实问题解决。",
+        criteria: [
+          ["Design process / 设计流程", "Students identify problems, plan, create, test and improve. / 学生发现问题、计划、制作、测试并改进。", "Evidence 证据: design briefs, planning sheets, prototypes."],
+          ["Making, coding or engineering / 制作、编程或工程", "Students actively build, code, model or test. / 学生主动搭建、编程、建模或测试。", "Evidence 证据: code, models, photos, videos."],
+          ["Testing and iteration / 测试与迭代", "Students identify failure points and improve based on evidence. / 学生找出问题点并基于证据改进。", "Evidence 证据: test results, redesign notes."],
+          ["Safety and teamwork / 安全与团队合作", "Students use tools safely and cooperate in roles. / 学生安全使用工具并分工合作。", "Evidence 证据: safety routines, role sheets, project reflections."]
+        ]
+      },
+      english_subject: {
+        label: "English Subject Classes 英语学科课",
+        brief: "English Subject Classes focus: learning subject content through English with vocabulary, reading support, discussion and meaningful output.\n英语学科课重点：通过英语学习学科内容，并提供词汇、阅读支持、讨论和有意义的产出。",
+        criteria: [
+          ["Subject knowledge through English / 通过英语学习学科知识", "Students learn content while developing academic English. / 学生学习学科内容并发展学术英语。", "Evidence 证据: content objectives, language objectives, student work."],
+          ["Vocabulary and sentence support / 词汇与句型支持", "Students use key words and sentence structures for the topic. / 学生使用主题关键词和句型。", "Evidence 证据: word banks, sentence frames, models."],
+          ["Reading and discussion / 阅读与讨论", "Texts are scaffolded and students discuss ideas in English. / 文本有支架，学生用英语讨论。", "Evidence 证据: guided reading, discussion prompts."],
+          ["Meaningful output / 有意义的产出", "Students produce presentations, paragraphs, posters or reports. / 学生产出演讲、段落、海报或报告。", "Evidence 证据: final products, rubrics, drafts."]
+        ]
+      },
+      language_literature: {
+        label: "English Language and Literature 英语语言与文学",
+        brief: "Language and Literature focus: text study, interpretation, author choices, evidence, analytical writing, creative response and discussion.\n语言与文学重点：文本学习、解读、作者选择、证据、分析写作、创意回应和讨论。",
+        criteria: [
+          ["Text sequence and interpretation / 文本序列与解读", "Texts build reading confidence and analytical skill. / 文本帮助学生建立阅读信心和分析能力。", "Evidence 证据: reading list, journals, annotated texts."],
+          ["Author choices / 作者选择", "Students analyse language, structure, character, theme and effect. / 学生分析语言、结构、人物、主题和效果。", "Evidence 证据: annotations, analysis paragraphs."],
+          ["Evidence-based writing / 基于证据的写作", "Students support ideas with quotations and explanation. / 学生用引用和解释支持观点。", "Evidence 证据: PEEL paragraphs, quote banks, drafts."],
+          ["Discussion and criteria-based assessment / 讨论与标准化评估", "Students discuss interpretations and complete criteria-aligned tasks. / 学生讨论解读并完成符合标准的任务。", "Evidence 证据: seminar notes, rubrics, marked work."]
+        ]
+      }
+    };
+
+    const localCriteria = [
+      ["School systems and expectations / 学校制度与要求", "The teacher works respectfully within school routines and procedures. / 教师尊重并遵守学校常规和流程。", "Evidence 证据: punctuality, meeting participation, deadlines, policy alignment."],
+      ["Parent confidence and communication / 家长信任与沟通", "The teacher contributes to parent confidence through professional behaviour. / 教师通过专业行为增强家长信任。", "Evidence 证据: parent feedback, communication records, meeting notes."],
+      ["School events and public-facing work / 学校活动与对外工作", "The teacher supports open days, demo lessons, showcases and events when assigned. / 教师按安排支持开放日、展示课、展示活动等。", "Evidence 证据: event participation, demo support, showcase preparation."],
+      ["Professional attitude and team fit / 职业态度与团队融合", "The teacher is cooperative, respectful and solution-focused. / 教师合作、尊重他人，并以解决问题为导向。", "Evidence 证据: staff feedback, cooperation examples, meeting behaviour."]
+    ];
+
+    const studentCriteria = [
+      ["Classroom behaviour and routines / 课堂行为与常规", "The teacher maintains calm, clear routines and manages behaviour. / 教师建立清晰稳定的课堂常规并管理学生行为。", "Evidence 证据: patrol records, behaviour notes, classroom observation."],
+      ["Student safety and supervision / 学生安全与看护", "The teacher supervises students responsibly and prevents avoidable risks. / 教师负责任地看护学生并预防风险。", "Evidence 证据: incident records, safety routines, supervision notes."],
+      ["Pastoral care and wellbeing / 德育关怀与学生身心发展", "The teacher notices student needs and cooperates with follow-up. / 教师关注学生需求并配合后续跟进。", "Evidence 证据: student support records, wellbeing notes, referrals."],
+      ["Attendance and follow-up cooperation / 考勤与跟进配合", "The teacher supports attendance, lateness, homework and student accountability systems. / 教师配合考勤、迟到、作业和学生责任跟进。", "Evidence 证据: attendance data, lateness records, follow-up notes."]
+    ];
+
+    const collabCriteria = [
+      ["Daily classroom cooperation / 日常课堂协作", "The teacher cooperates with the homeroom teacher or co-teacher before, during and after lessons. / 教师课前、课中、课后与班主任或协同教师配合。", "Evidence 证据: co-planning notes, classroom cooperation, shared routines."],
+      ["Support for different student levels / 不同层次学生支持", "The teacher works with the co-teacher to support lower-level students and extend stronger students. / 教师与协同教师合作支持弱生并拓展强生。", "Evidence 证据: differentiated support, scaffolding, extension tasks."],
+      ["Homework, resources and follow-up / 作业、资源与跟进", "The teacher communicates clearly about homework, resources and missing work. / 教师清晰沟通作业、资源和缺交情况。", "Evidence 证据: homework records, messages, resource sharing."],
+      ["Student response and class atmosphere / 学生反应与课堂氛围", "Students respond positively and the class atmosphere supports learning. / 学生反应积极，课堂氛围支持学习。", "Evidence 证据: student attitude, participation, class climate."]
+    ];
+
+    function criterionHTML(group, item, index) {
+      return `<div class="criterion">
+        <div class="criterion-top">
+          <div>
+            <div class="criterion-title">${index + 1}. ${item[0]}</div>
+            <div class="criterion-help">${item[1]}</div>
+            <div class="evidence-prompt">${item[2]}</div>
+          </div>
+          <div><label>Score / 分数</label><select class="score-input" data-save="${group}" data-group="${group}" onchange="calculateScore(); autoSaveQuiet();">${scoreOptions}</select></div>
+        </div>
+        <label>Evidence / Comment 证据 / 评语</label>
+        <textarea class="comment-input" data-save="${group}" data-group="${group}" placeholder="English first, then Chinese if needed. 先英文，必要时再中文。" oninput="autoSaveQuiet()"></textarea>
+      </div>`;
+    }
+
+    function render(containerId, group, items) {
+      document.getElementById(containerId).innerHTML = items.map((item, i) => criterionHTML(group, item, i)).join("");
+    }
+
+    function loadSubjectContent() {
+      const subject = document.getElementById("subjectSelect").value;
+      const profile = subjectProfiles[subject];
+      document.getElementById("leadBrief").textContent = profile.brief;
+      render("leadCriteria", "lead", profile.criteria);
+      render("localCriteria", "local", localCriteria);
+      render("studentCriteria", "student", studentCriteria);
+      render("collabCriteria", "collab", collabCriteria);
+      restoreData(getSavedData(), true);
+      applyRoleLocks();
+      calculateScore();
+    }
+
+    function loginAs(role) {
+      currentRole = role;
+      const name = document.getElementById("loginName").value.trim();
+      document.getElementById("loginScreen").classList.add("hidden");
+      document.getElementById("app").classList.remove("hidden");
+      document.getElementById("currentRoleLabel").textContent = roleLabels[role][0];
+      document.getElementById("currentRoleLabelZh").textContent = roleLabels[role][1];
+      loadSubjectContent();
+      if (name) {
+        if (role === "lead") document.getElementById("leadName").value = name;
+        if (role === "local") document.getElementById("localName").value = name;
+        if (role === "student") document.getElementById("studentName").value = name;
+        if (role === "collab") document.getElementById("collabName").value = name;
+      }
+      restoreData(getSavedData(), true);
+      applyRoleLocks();
+      calculateScore();
+    }
+
+    function applyRoleLocks() {
+      document.querySelectorAll("section[data-owner]").forEach(section => {
+        const owner = section.dataset.owner;
+        const note = section.querySelector(".lock-note");
+        const allowed = currentRole === "admin" || owner === currentRole || owner === "admin" && currentRole === "lead";
+        section.classList.toggle("locked", !allowed);
+        if (note) {
+          note.classList.toggle("hidden", allowed);
+          note.innerHTML = "Locked for your role. This section belongs to another reviewer.<div class='zh'>当前角色不可编辑。本部分由其他评审填写。</div>";
+        }
+      });
+    }
+
+    function average(group) {
+      const inputs = [...document.querySelectorAll(`.score-input[data-group='${group}']`)];
+      const values = inputs.map(i => i.value === "" ? null : Number(i.value)).filter(v => v !== null);
+      if (!values.length) return 0;
+      return Math.round(values.reduce((a,b) => a+b, 0) / (values.length * 5) * 100);
+    }
+
+    function calculateScore() {
+      const lead = average("lead"), local = average("local"), student = average("student"), collab = average("collab");
+      const serious = document.getElementById("seriousConcern")?.value === "yes";
+      const overall = serious ? 0 : Math.round(lead * 0.35 + local * 0.25 + student * 0.25 + collab * 0.15);
+      document.getElementById("leadScore").textContent = lead;
+      document.getElementById("localScore").textContent = local;
+      document.getElementById("studentScore").textContent = student;
+      document.getElementById("collabScore").textContent = collab;
+      document.getElementById("overallScore").textContent = overall;
+      const rating = serious ? "Serious Concern / Review Required 重大问题 / 需要复核" : overall >= 90 ? "Excellent 优秀" : overall >= 80 ? "Good 良好" : overall >= 70 ? "Meets Expectations 达到要求" : overall >= 60 ? "Developing 发展中" : overall > 0 ? "Performance Concern 绩效关注" : "Not yet scored 尚未评分";
+      document.getElementById("ratingText").textContent = rating;
+    }
+
+    function collectData() {
+      const data = {
+        savedAt: new Date().toISOString(),
+        recordId: getRecordId(),
+        fields: {},
+        scores: []
+      };
+      document.querySelectorAll("input[id], select[id], textarea[id]").forEach(el => data.fields[el.id] = el.value);
+      document.querySelectorAll(".score-input, .comment-input").forEach((el, i) => data.scores.push({ i, value: el.value }));
+      return data;
+    }
+
+    function restoreData(data, quiet=false) {
+      if (!data) return;
+      Object.entries(data.fields || {}).forEach(([id, value]) => {
+        const el = document.getElementById(id);
+        if (el) el.value = value;
+      });
+      if (data.fields?.subjectSelect && document.getElementById("subjectSelect").value !== data.fields.subjectSelect && !quiet) {
+        document.getElementById("subjectSelect").value = data.fields.subjectSelect;
+        loadSubjectContent();
+      }
+      const dynamic = [...document.querySelectorAll(".score-input, .comment-input")];
+      (data.scores || []).forEach(item => { if (dynamic[item.i]) dynamic[item.i].value = item.value; });
+      calculateScore();
+    }
+
+    function getSavedData() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; }
+    }
+
+    function getRecordId() {
+      const teacher = (document.getElementById("teacherName")?.value || "unknown_teacher").trim().replace(/[^a-z0-9]/gi, "_").toLowerCase();
+      const year = (document.getElementById("academicYear")?.value || "unknown_year").trim().replace(/[^a-z0-9]/gi, "_").toLowerCase();
+      const semester = document.getElementById("semester")?.value || "S1";
+      return `${teacher}_${year}_${semester}`;
+    }
+
+    function getHistory() {
+      try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || {}; } catch { return {}; }
+    }
+
+    function setHistory(history) {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    }
+
+    function saveSemesterRecord() {
+      const data = collectData();
+      const history = getHistory();
+      history[data.recordId] = data;
+      setHistory(history);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      renderSemesterHistory();
+      alert("Semester record saved.
+
+学期记录已保存。
+
+Record: " + data.recordId);
+    }
+
+    function saveLocal() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(collectData()));
+      alert("Quick saved on this computer. 快速保存到本机。
+
+For semester archive, use Save Semester Record. 如需保存为学期记录，请点击“保存学期记录”。");
+    }
+
+    function autoSaveQuiet() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(collectData()));
+    }
+
+    function exportJSON() {
+      const data = collectData();
+      const history = getHistory();
+      history[data.recordId] = data;
+      setHistory(history);
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      const teacher = (document.getElementById("teacherName")?.value || "teacher").replace(/[^a-z0-9]/gi, "_");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${teacher}_${document.getElementById("academicYear")?.value || "year"}_${document.getElementById("semester")?.value || "semester"}_international_teacher_review.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function encodeReviewData(data) {
+      const json = JSON.stringify(data);
+      return btoa(unescape(encodeURIComponent(json)));
+    }
+
+    function decodeReviewData(encoded) {
+      const json = decodeURIComponent(escape(atob(encoded)));
+      return JSON.parse(json);
+    }
+
+    function createShareLink() {
+      const data = collectData();
+      const encoded = encodeReviewData(data);
+      const base = window.location.href.split("#")[0];
+      const link = `${base}#review=${encoded}`;
+
+      if (link.length > 18000) {
+        alert("This review is getting too large for a reliable share link. Please use Export Saved File instead.
+
+此考核内容较多，链接可能过长。请使用“导出文件”。");
+        return;
+      }
+
+      navigator.clipboard.writeText(link).then(() => {
+        alert("Saved review link copied. Send this link to the next reviewer.
+
+保存链接已复制。请发送给下一位评审。
+
+Important: this stores the review data inside the link, not in a real database.
+注意：数据保存在链接中，不是在真实数据库中。");
+      }).catch(() => {
+        prompt("Copy this saved review link / 请复制此保存链接:", link);
+      });
+    }
+
+    function loadFromShareLink() {
+      const hash = window.location.hash || "";
+      if (!hash.startsWith("#review=")) {
+        alert("No saved review data found in the link.
+
+链接中没有找到已保存的考核数据。");
+        return;
+      }
+      try {
+        const encoded = hash.replace("#review=", "");
+        const data = decodeReviewData(encoded);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        if (data.fields?.subjectSelect && document.getElementById("subjectSelect")) {
+          document.getElementById("subjectSelect").value = data.fields.subjectSelect;
+        }
+        if (document.getElementById("app").classList.contains("hidden")) {
+          alert("Review data found. Please log in with your reviewer role, then the saved review will load.
+
+已找到考核数据。请先选择您的评审角色登录，之后数据会自动加载。");
+        } else {
+          loadSubjectContent();
+          restoreData(data);
+          alert("Saved review loaded from link.
+
+已从链接加载考核数据。");
+        }
+      } catch (e) {
+        alert("Could not load the saved review link. It may be damaged or too long.
+
+无法加载保存链接，链接可能损坏或过长。");
+      }
+    }
+
+    function importJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          if (data.allSemesterRecords) {
+            setHistory(data.allSemesterRecords);
+            alert("All semester records imported.
+
+已导入全部学期记录。");
+            renderSemesterHistory();
+            return;
+          }
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+          const history = getHistory();
+          history[data.recordId || getRecordId()] = data;
+          setHistory(history);
+          if (data.fields?.subjectSelect) document.getElementById("subjectSelect").value = data.fields.subjectSelect;
+          loadSubjectContent();
+          restoreData(data);
+          renderSemesterHistory();
+          alert("Imported successfully. 导入成功。");
+        } catch (e) {
+          alert("Import failed. Please choose a valid saved review JSON file. 导入失败，请选择有效JSON文件。");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function renderSemesterHistory() {
+      const box = document.getElementById("semesterHistory");
+      if (!box) return;
+      const history = getHistory();
+      const records = Object.values(history).sort((a, b) => (b.savedAt || "").localeCompare(a.savedAt || ""));
+      if (!records.length) {
+        box.innerHTML = "No saved semester records yet.<div class='zh'>暂无已保存学期记录。</div>";
+        return;
+      }
+      box.innerHTML = records.map(record => {
+        const f = record.fields || {};
+        const title = `${f.teacherName || "Unnamed teacher"} | ${f.academicYear || "No year"} | ${f.semester || "No semester"}`;
+        const sub = `${f.subjectSelect || "subject"} · Saved: ${record.savedAt ? new Date(record.savedAt).toLocaleString() : "unknown"}`;
+        return `<div style="border:1px solid #e5e7eb; border-radius:14px; padding:10px; margin-bottom:8px; background:white;">
+          <strong>${title}</strong><div class="zh">${f.teacherName || "未命名教师"} | ${f.academicYear || "无学年"} | ${f.semester === "S2" ? "第二学期" : "第一学期"}</div>
+          <div class="small">${sub}</div>
+          <div class="button-row" style="margin-top:8px;">
+            <button class="light" onclick="loadSemesterRecord('${record.recordId}')">Load 加载</button>
+            <button class="light" onclick="deleteSemesterRecord('${record.recordId}')">Delete 删除</button>
+          </div>
+        </div>`;
+      }).join("");
+    }
+
+    function loadSemesterRecord(recordId) {
+      const history = getHistory();
+      const data = history[recordId];
+      if (!data) return alert("Record not found. 找不到记录。");
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      if (data.fields?.subjectSelect) document.getElementById("subjectSelect").value = data.fields.subjectSelect;
+      loadSubjectContent();
+      restoreData(data);
+      alert("Semester record loaded. 已加载学期记录。");
+    }
+
+    function deleteSemesterRecord(recordId) {
+      if (!confirm("Delete this semester record?
+
+是否删除此学期记录？")) return;
+      const history = getHistory();
+      delete history[recordId];
+      setHistory(history);
+      renderSemesterHistory();
+    }
+
+    function exportAllSemesterRecords() {
+      const data = { exportedAt: new Date().toISOString(), allSemesterRecords: getHistory() };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "all_international_teacher_semester_reviews.json";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function getRows(group) {
+      return [...document.querySelectorAll(`.score-input[data-group='${group}']`)].map(input => {
+        const card = input.closest(".criterion");
+        return {
+          title: card.querySelector(".criterion-title").textContent,
+          expectation: card.querySelector(".criterion-help").textContent,
+          evidence: card.querySelector(".evidence-prompt").textContent,
+          score: input.value || "Not scored 未评分",
+          comment: card.querySelector(".comment-input").value || ""
+        };
+      });
+    }
+
+    function generateSummary() {
+      calculateScore();
+      const subject = subjectProfiles[document.getElementById("subjectSelect").value].label;
+      const summary = `International Teacher Review 国际教师考核\n\nTeacher 教师: ${document.getElementById("teacherName").value || "Not provided 未填写"}\nSubject 学科: ${subject}\nGrade 年级: ${document.getElementById("gradeLevel").value || "Not provided 未填写"}\nReview Period 考核周期: ${document.getElementById("reviewPeriod").value || "Not provided 未填写"}
+Academic Year 学年: ${document.getElementById("academicYear").value || "Not provided 未填写"}
+Semester 学期: ${document.getElementById("semester").value === "S2" ? "Semester 2 第二学期" : "Semester 1 第一学期"}\n\nReviewer Ownership 评审责任:\n1. Lead Reviewer / International Head 主评审 / 国际负责人: ${document.getElementById("leadName").value || "Not provided 未填写"}\n2. Chinese Vice Principal 中方副校长: ${document.getElementById("localName").value || "Not provided 未填写"}\n3. Student Development Centre 学生发展中心: ${document.getElementById("studentName").value || "Not provided 未填写"}\n4. Homeroom / Co-Teacher 班主任 / 协同教师: ${document.getElementById("collabName").value || "Not provided 未填写"}\n\nScores 分数:\n- International Academic Review 国际学术评审: ${document.getElementById("leadScore").textContent}%\n- Local Leadership Review 本地管理评审: ${document.getElementById("localScore").textContent}%\n- Student Development Review 学生发展评审: ${document.getElementById("studentScore").textContent}%\n- Collaboration Review 协作评审: ${document.getElementById("collabScore").textContent}%\n\nOverall 总分: ${document.getElementById("overallScore").textContent}%\nRating 等级: ${document.getElementById("ratingText").textContent}\n\nKey Strengths 主要优势:\n${document.getElementById("strengths").value || "Not provided 未填写"}\n\nAreas for Development 发展方向:\n${document.getElementById("development").value || "Not provided 未填写"}\n\nNext Steps 下一步行动:\n${document.getElementById("nextSteps").value || "Not provided 未填写"}\n\nSerious Concern 重大问题:\n${document.getElementById("seriousConcern").value === "yes" ? "Yes 是" : "No 否"}\n${document.getElementById("seriousNotes").value || ""}`;
+      document.getElementById("summaryOutput").textContent = summary;
+      return summary;
+    }
+
+    function copySummary() {
+      const text = generateSummary();
+      navigator.clipboard.writeText(text).then(() => alert("Copied. 已复制。"));
+    }
+
+    function tableHTML(title, rows) {
+      return `<h2>${title}</h2><table class="print-table"><thead><tr><th>Criterion 标准</th><th>Expectation 要求</th><th>Evidence 证据</th><th>Score 分数</th><th>Comment 评语</th></tr></thead><tbody>${rows.map(r => `<tr><td><strong>${r.title}</strong></td><td>${r.expectation}</td><td>${r.evidence}</td><td>${r.score}</td><td>${r.comment}</td></tr>`).join("")}</tbody></table>`;
+    }
+
+    function printCleanReport() {
+      const summary = generateSummary();
+      document.getElementById("printReport").innerHTML = `<h1>International Teacher Review 国际教师考核</h1><p style="white-space:pre-wrap">${summary}</p>${tableHTML("1. International Academic Review 国际学术评审", getRows("lead"))}${tableHTML("2. Local Leadership Review 本地管理评审", getRows("local"))}${tableHTML("3. Student Development Review 学生发展评审", getRows("student"))}${tableHTML("4. Collaboration Review 协作评审", getRows("collab"))}`;
+      setTimeout(() => window.print(), 100);
+    }
+
+    function logout() {
+      currentRole = null;
+      document.getElementById("app").classList.add("hidden");
+      document.getElementById("loginScreen").classList.remove("hidden");
+    }
+
+    window.addEventListener("input", e => { if (e.target.matches("input, textarea, select")) autoSaveQuiet(); });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      renderSemesterHistory();
+      if ((window.location.hash || "").startsWith("#review=")) {
+        loadFromShareLink();
+      }
+    });
+  </script>
+</body>
+</html>
